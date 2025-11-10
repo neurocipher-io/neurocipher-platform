@@ -1,0 +1,308 @@
+
+
+OBS-003 Alerting, SLOs and Incident Response
+
+  
+
+  
+
+Status: Approved  Owner: Reliability Engineering  Last Reviewed: 2025-10-24
+
+Tags: alerting / SLO / incident-response / observability / resilience
+
+  
+
+  
+
+  
+
+  
+
+1 Purpose
+
+  
+
+  
+
+Define a unified policy for service-level objectives, alert routing, escalation, and incident handling across the Neurocipher Pipeline and Agent Forge orchestration layer.
+
+  
+
+  
+
+  
+
+  
+
+2 Scope
+
+  
+
+  
+
+Applies to all production services and shared infrastructure in AWS.
+
+Includes ingestion APIs, background workers, vector index, orchestration tasks, and event-driven components.
+
+  
+
+  
+
+  
+
+  
+
+3 Service Level Objectives (SLOs) and Indicators (SLIs)
+
+  
+
+|   |   |   |
+|---|---|---|
+|Service Area|Target|SLI Definition|
+|Ingest API availability|99.9 % / month|1 − (5xx requests ÷ total requests)|
+|Ingest API latency|p95 ≤ 300 ms|Histogram quantile p95 of request_duration_seconds|
+|Pipeline freshness|99 % ≤ 5 min|Documents available in index ≤ 5 min after ingest|
+|Vector search latency|p95 ≤ 200 ms|Query duration histogram p95|
+|Index error rate|≤ 0.1 %|Failed index writes ÷ total writes|
+
+  
+
+  
+
+  
+
+  
+
+4 Error Budget and Burn Rate
+
+  
+
+  
+
+- 99.9 % availability allows 43.2 minutes downtime per month.
+- Track burn at 1 h and 6 h windows.
+- Page if burn > 2 % per hour (fast burn).
+- Ticket if burn > 5 % per day (slow burn).
+
+  
+
+  
+
+Error budget usage is reviewed monthly in Reliability Report REL-002.
+
+  
+
+  
+
+  
+
+  
+
+5 Alert Policy
+
+  
+
+  
+
+- Alert on user-visible symptoms only (e.g., latency, errors, unavailability).
+- Group alerts by service and tenant to avoid alert storms.
+- Mute alerts during deploy for 10 minutes post-success.
+- Every alert links to a runbook in /docs/runbooks/.
+- Alerts must include severity, description, owner, and clear next steps.
+
+  
+
+  
+
+  
+
+  
+
+  
+
+6 Alertmanager Routing
+
+  
+
+route:
+
+  receiver: pagerduty
+
+  group_by: [service, env]
+
+  routes:
+
+  - matchers: [severity="ticket"]
+
+    receiver: jira
+
+receivers:
+
+- name: pagerduty
+
+  pagerduty_configs:
+
+  - routing_key: ${PAGERDUTY_KEY}
+
+- name: jira
+
+  webhook_configs:
+
+  - url: https://hooks.example/jira
+
+Severity Mapping
+
+  
+
+- page → Immediate human intervention
+- ticket → Work item within 48 h
+- info → Logging only
+
+  
+
+  
+
+  
+
+  
+
+  
+
+7 On-Call and Escalation
+
+  
+
+  
+
+- Primary and secondary rotation weekly.
+- Escalate to manager if unacknowledged > 15 minutes.
+- Hand-off checklist documented in oncall.md.
+- All incidents are recorded in the Incident Register (/ops/incidents/).
+
+  
+
+  
+
+Escalation Flow
+
+  
+
+1. Primary Engineer (pager triggered)
+2. Secondary Engineer (5 min)
+3. Engineering Manager (15 min)
+4. Director of Platform if critical (30 min)
+
+  
+
+  
+
+  
+
+  
+
+  
+
+8 Incident Lifecycle
+
+  
+
+|   |   |   |
+|---|---|---|
+|Phase|Action|Output|
+|Detection|Alert triggers via AMP or CloudWatch|Page with context links|
+|Declaration|Incident Commander appointed|Incident doc initiated|
+|Containment|Rollback, circuit break, or failover|Service stabilized|
+|Resolution|Root cause identified|Service restored|
+|Post-mortem|Blameless review within 72 h|Report and action items|
+
+Post-mortem Checklist
+
+  
+
+- Timeline and impact summary
+- Root cause and mitigation plan
+- Follow-up tasks with owners and due dates
+- Lessons learned → SLO adjustment or automation task
+
+  
+
+  
+
+  
+
+  
+
+  
+
+9 Automated Safeguards
+
+  
+
+  
+
+- Canary deployments auto-rollback on p95 latency or error regression.
+- Circuit breakers for external APIs with fallback responses.
+- Synthetic checks run every minute for key endpoints.
+- Automated alerts muted for known maintenance windows.
+
+  
+
+  
+
+  
+
+  
+
+  
+
+10 Compliance and Retention
+
+  
+
+|   |   |   |
+|---|---|---|
+|Artifact|Retention|Storage|
+|Incident records|2 years|S3 KMS encrypted|
+|Alert history|1 year|Amazon Managed Prometheus|
+|Post-mortems|Permanent|Git (/ops/postmortems/)|
+|Audit logs|90 days|CloudTrail|
+
+Access is controlled by IAM roles (IncidentResponder, SREManager).
+
+  
+
+  
+
+  
+
+  
+
+11 Security and PII
+
+  
+
+  
+
+- Mask customer data in alerts, traces and incident artifacts.
+- Never include tokens or secrets in incident summaries.
+- Apply KMS encryption to all retained incident records.
+
+  
+
+  
+
+  
+
+  
+
+  
+
+12 Review and Continuous Improvement
+
+  
+
+  
+
+- Quarterly review of SLO targets and incident trend analysis.
+- Metrics tracked: MTTD, MTTR, error budget burn rate, false-positive alerts.
+- Annual game-day simulations for disaster response (see REL-001).
