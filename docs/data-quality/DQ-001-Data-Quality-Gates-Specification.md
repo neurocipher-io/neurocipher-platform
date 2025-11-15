@@ -1,3 +1,9 @@
+id: DQ-001
+title: Data Quality Gates Specification
+owner: Data Platform Lead / Governance Engineering
+status: Final v1.0
+last_reviewed: 2025-11-09
+
 # Document ID: DQ-001
 **Title:** Data Quality Gates Specification  
 **Status:** Final v1.0  

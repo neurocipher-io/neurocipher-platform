@@ -1,3 +1,8 @@
+id: COST-001
+title: FinOps Governance and Cloud Cost Optimization Policy
+owner: FinOps / Platform SRE / Finance Operations
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 COST-001 — FinOps Governance and Cloud Cost Optimization Policy
 

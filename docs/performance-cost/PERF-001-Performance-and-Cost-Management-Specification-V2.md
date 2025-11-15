@@ -1,4 +1,8 @@
-
+id: PERF-001
+title: Performance and Cost Management Specification
+owner: Platform SRE / FinOps
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 PERF-001 — Performance and Cost Management Specification
 

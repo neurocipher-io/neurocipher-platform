@@ -1,5 +1,11 @@
   
 
+id: SEC-003
+title: Network Policy and Segmentation
+owner: Security Engineering
+status: Draft for review
+last_reviewed: 2025-11-15
+
 SEC-003 Network Policy and Segmentation
 
   
@@ -272,11 +278,13 @@ All endpoints have private DNS enabled.
 
   
 
-  
+## Acceptance Criteria
 
-  
-
-  
+- Public, private-app, and private-data subnets are provisioned with the CIDR layout and routing rules described in sections 2 and 3 for all production environments.
+- Security groups and NACLs enforce default-deny posture with only the documented 443/22 exceptions, and are verified via automated checks or Network Access Analyzer.
+- VPC endpoints for S3, DynamoDB, KMS, Secrets Manager, STS, and CloudWatch are configured with restrictive endpoint policies and private DNS enabled.
+- NAT egress is restricted to approved package repositories, and outbound egress anomalies are monitored via Flow Logs, GuardDuty, and Macie as described.
+- Network observability (Flow Logs, Network Insights Path, SG metrics) and corresponding alerts are deployed and integrated into central dashboards.
 
   
 

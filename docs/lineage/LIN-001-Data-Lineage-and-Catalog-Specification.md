@@ -1,3 +1,9 @@
+id: LIN-001
+title: Data Lineage and Catalog Specification
+owner: Data Platform Lead / Governance Engineering
+status: Final v1.0
+last_reviewed: 2025-11-09
+
 # Document ID: LIN-001
 **Title:** Data Lineage and Catalog Specification  
 **Status:** Final v1.0  

@@ -1,8 +1,11 @@
-# Document ID: SVC-002
-**Title:** Offline Export Contract Overview  
-**Status:** Draft v0.1  
-**Owner:** platform-serving / data platform  
-**Last Reviewed:** 2025-11-09  
+id: SVC-002
+title: Offline Export Contract Overview
+owner: platform-serving / data platform
+status: Draft v0.1
+last_reviewed: 2025-11-09
+
+# SVC-002 Offline Export Contract
+
 **References:** SVC-002-Offline-Export-Contract-Specification.md, LAK-001, PROC-001, DR-001
 
 ---
@@ -52,7 +55,9 @@ sha256sum --check export.discovery.20251109.parquet.sha256
 - All exports derived from governed tables listed in LAK-001; no ad-hoc SQL without review.  
 - Encryption: KMS CMKs per tenant; data classified ≥ Restricted uses customer-provided keys.  
 - Naming: `export.<dataset>.<yyyymmdd>.parquet`. No spaces or uppercase.  
-- Access provisioning uses `ops/owners.yaml` for approvals and is logged in IAM change tracker.
+- Access provisioning uses `ops/owners.yaml` for approvals and is logged in IAM change tracker.  
+- Standard headers on export-control APIs (for example, `/admin/exports`): `Authorization`, `Tenant-Id`, `Correlation-Id`, aligned with API-001; any write-style operations also require `Idempotency-Key`.  
+- Export schemas for each channel (snapshot, customer drop, partner bundle, audit package) must be stored in `schemas/events/` and versioned, with changes following the same compatibility and deprecation rules as other contracts.
 
 ## 6. SLA & Compliance
 - RPO ≤ 60 minutes for scheduled exports; ad-hoc commitments documented per request.  
@@ -67,6 +72,13 @@ sha256sum --check export.discovery.20251109.parquet.sha256
 5. Record delivery evidence (hash + timestamp) for every production run.
 
 ## 8. Change Log
-| Version | Date | Summary |
-|---------|------|---------|
-| v0.1 | 2025-11-09 | Initial overview distilled from SVC-002 specification |
+|| Version | Date | Summary |
+||---------|------|---------|
+|| v0.1 | 2025-11-09 | Initial overview distilled from SVC-002 specification |
+
+## 9. Acceptance Criteria
+- Export channels and schemas are documented in SVC-002 and registered under `schemas/events/` with explicit versions.  
+- All production exports are encrypted with the correct CMK (or customer-provided keys for Restricted data) and validated via checksum manifests.  
+- Export naming and layout conventions (dataset, date, tenant) match LAK-001 and can be queried consistently by downstream tools.  
+- RPO/RTO targets for export pipelines (including DR-001 requirements) are met during DR drills and documented with evidence.  
+- Access provisioning for export destinations is traceable via `ops/owners.yaml` and IAM change records.

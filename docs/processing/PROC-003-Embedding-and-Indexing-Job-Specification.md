@@ -1,3 +1,9 @@
+id: PROC-003
+title: Embedding & Indexing Job Specification
+owner: Data Platform Lead / Pipeline Engineering
+status: Final v1.0
+last_reviewed: 2025-11-08
+
 # Document ID: PROC-003
 **Title:** Embedding & Indexing Job Specification  
 **Status:** Final v1.0  

@@ -1,3 +1,9 @@
+id: PROC-002
+title: Stream Processing Job Specification
+owner: Data Platform Lead / Pipeline Engineering
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # Document ID: PROC-002
 **Title:** Stream Processing Job Specification  
 **Status:** Final v1.0  

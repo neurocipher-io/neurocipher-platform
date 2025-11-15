@@ -1,5 +1,11 @@
   
 
+id: SEC-004
+title: Secrets and KMS Rotation Playbook
+owner: Security Engineering
+status: Draft for review
+last_reviewed: 2025-11-15
+
 SEC-004 Secrets and KMS Rotation Playbook
 
   
@@ -242,6 +248,8 @@ aws kms rotate-key --key-id $(aws kms list-keys --query "Keys[].KeyId" --output 
 
   
 
+  
+
 |   |   |
 |---|---|
 |Control|Mechanism|
@@ -253,17 +261,17 @@ aws kms rotate-key --key-id $(aws kms list-keys --query "Keys[].KeyId" --output 
 
   
 
-  
+## Acceptance Criteria
 
-  
+- KMS CMKs for root, app, data, log, backup, and dev/test tiers are created with aliases and rotation periods matching the key hierarchy in section 3.
+- All application secrets, database credentials, and API keys are stored in Secrets Manager or SSM Parameter Store with rotation Lambdas configured per section 4.
+- Automated KMS key rotation and quarterly manual rotation checks are in place, with Config rules and Security Hub controls reporting compliant status.
+- Break-glass access follows the procedure in section 7, including time-bounded sessions, audit logging to the log vault, and immediate rotation of impacted secrets.
+- Incident response steps for compromised secrets or keys (section 7, incident response) are documented in runbooks and validated in at least one tabletop exercise per year.
 
   
 
 10. Residual risk
-
-  
-
-  
 
 - Minimal window between new secret creation and service propagation (< 60 s).
 - Possible false positives in automated rotation tests—accepted as low impact.

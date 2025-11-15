@@ -1,3 +1,9 @@
+id: TEST-002
+title: Continuous Integration and Test Automation
+owner: QA Lead
+status: Accepted
+last_reviewed: 2025-10-24
+
 TEST-002 Continuous Integration & Test Automation
 
   
@@ -214,6 +220,14 @@ jobs:
   
 
   
+
+Acceptance Criteria
+
+- A CI workflow implementing the triggers and automation layers described here (unit, integration, static analysis, coverage, build, notifications) is defined and active for in-scope repositories.
+- Coverage and quality gates (≥ 85% coverage, no failing tests, lint/security checks passing) are enforced as required status checks for PR merges.
+- CI runs use pinned base images and manage secrets/test data according to the environment consistency rules in this document.
+- Nightly or scheduled pipelines execute performance hooks and publish metrics to observability tooling for trend tracking.
+- CI configuration remains aligned with ADR-008 and CI-001/CI-002; changes to the pipeline are reviewed and tested before rollout.
 
 References
 

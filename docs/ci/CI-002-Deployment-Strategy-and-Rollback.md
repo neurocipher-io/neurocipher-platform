@@ -1,3 +1,9 @@
+id: CI-002
+title: Continuous Delivery and Environment Promotion Specification
+owner: Release Engineering, SRE Lead, Security Lead
+status: Draft for review
+last_reviewed: 2025-11-15
+
 # **CI/CL-002 — Continuous Delivery and Environment Promotion Specification**
 
   

@@ -1,5 +1,11 @@
 
 
+id: OBS-003
+title: Alerting, SLOs and Incident Response
+owner: Reliability Engineering
+status: Approved
+last_reviewed: 2025-10-24
+
 OBS-003 Alerting, SLOs and Incident Response
 
   
@@ -308,3 +314,11 @@ Access is controlled by IAM roles (IncidentResponder, SREManager).
 - Quarterly review of SLO targets and incident trend analysis.
 - Metrics tracked: MTTD, MTTR, error budget burn rate, false-positive alerts.
 - Annual game-day simulations for disaster response (see REL-001).
+
+## 13. Acceptance Criteria
+
+- SLOs and SLIs defined in this spec (including ingest availability, freshness, vector latency, index error rate, and Security Engine latency) are implemented and tracked in observability tooling.
+- Error-budget burn alerts are configured for the defined SLOs with page/ticket thresholds matching this document.
+- Every alert above a page or ticket severity links to a runbook under `docs/runbooks/` and includes severity, owner, and clear next steps.
+- On-call rotations and escalation paths are documented and kept current in incident tooling and `/ops` docs, including the Incident Register and oncall checklist.
+- Post-incident reviews for qualifying incidents are recorded in `/ops/postmortems/` within 72 hours and include the checklist items from this spec.

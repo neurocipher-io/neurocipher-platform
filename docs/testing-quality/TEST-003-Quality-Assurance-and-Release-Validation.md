@@ -1,4 +1,10 @@
 
+id: TEST-003
+title: Quality Assurance and Release Validation
+owner: QA Lead
+status: Accepted
+last_reviewed: 2025-10-24
+
 TEST-003 Quality Assurance & Release Validation
 
   
@@ -203,6 +209,14 @@ Implementation
   
 
   
+
+Acceptance Criteria
+
+- The three-stage release validation process (pre-release validation, functional/regression QA, release validation & sign-off) is followed for each production deployment in scope.
+- Smoke, regression, and UAT tests are executed against the staging environment, and any critical issues are resolved or explicitly deferred with approval before release.
+- Observability metrics remain within defined thresholds for the post-release monitoring window (e.g., 24–48 hours), and rollback is proven via a test or simulation before go-live.
+- QA and DevOps sign-off, including completion of the release checklist, is recorded and archived alongside QA reports in the designated S3 bucket.
+- Post-release defects and regressions are tracked and analyzed to improve future validation scopes and criteria.
 
 Metrics
 

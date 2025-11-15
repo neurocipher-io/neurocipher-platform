@@ -1,3 +1,9 @@
+id: API-002
+title: Service Contracts and Versioning
+owner: Platform
+status: Final v1.0
+last_reviewed: 2025-11-15
+
 # API-002 Service Contracts and Versioning
 
 Owner: Platform  

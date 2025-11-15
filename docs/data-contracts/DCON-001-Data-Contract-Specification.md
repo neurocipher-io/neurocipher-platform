@@ -1,4 +1,8 @@
-  
+id: DCON-001
+title: Data Contract Specification
+owner: Data Architecture
+status: For Board Review
+last_reviewed: 2025-11-06
 
 DCON-001 — Data Contract Specification
 
@@ -115,10 +119,29 @@ In scope: event payloads, S3 file layouts, Iceberg table specs, Weaviate classes
 
   
 
-- Envelope: Events share a canonical envelope; detail carries domain payload. Required fields include ULID id, account_id, type, schema_version, event_version, timestamps, trace_id, checksum.  
-- Registry Layout: s3://nc-<env>-schema/events/{type}/v{schema_version}/schema.json (+ examples).  
-- Compatibility: Additive optional fields with defaults are backward compatible; renames/removals are breaking; event_version increments when business meaning changes without schema break.  
-- Validation: Publishers validate before emit; consumers validate and reject to DLQ if invalid.  
+- Envelope: Events share a canonical envelope; detail carries domain payload. Required fields include ULID id, account_id, type, schema_version, event_version, timestamps, trace_id, checksum.  
+- Registry Layout: s3://nc-<env>-schema/events/{type}/v{schema_version}/schema.json (+ examples).  
+- Compatibility: Additive optional fields with defaults are backward compatible; renames/removals are breaking; event_version increments when business meaning changes without schema break.  
+- Validation: Publishers validate before emit; consumers validate and reject to DLQ if invalid.  
+
+**Example – canonical event envelope**
+
+```json
+{
+  "id": "01JB0GQW0A8Z7HQ8PRJ9TB9X1Z",
+  "source": "nc.app",
+  "account_id": "01HZX7K3M4A7W0E3V6S8R2N8C1",
+  "type": "finding.created",
+  "schema_version": 1,
+  "event_version": 1,
+  "occurred_at": "2025-10-28T14:05:23.412Z",
+  "emitted_at": "2025-10-28T14:05:23.980Z",
+  "trace_id": "f2b67f2a0d324c8c9a0a8c2a3b1caa21",
+  "actor": { "type": "SYSTEM" },
+  "checksum_sha256": "e0c9035898dd52fc65c41454cec9c4d2611bfb37b53a5e0e86c7cd9f7d2c2f3a",
+  "detail": { /* type-specific payload fields (see DM-004) */ }
+}
+```
 
   
 
@@ -133,8 +156,21 @@ In scope: event payloads, S3 file layouts, Iceberg table specs, Weaviate classes
   
 
 - Kinds: file schemas describe normalized file layouts and metadata for ingestion buckets.
-- Storage Layout: Stored in SRG with URN and SemVer under schemas/{namespace}/{name}/file/vX.Y.Z/schema.json.  
-- Required Meta: checksum_sha256, mime, pii_flags, policy, timestamps, as recorded in DDB metadata (contract links to DM-003).  
+- Storage Layout: Stored in SRG with URN and SemVer under schemas/{namespace}/{name}/file/vX.Y.Z/schema.json.  
+- Required Meta: checksum_sha256, mime, pii_flags, policy, timestamps, as recorded in DDB metadata (contract links to DM-003).  
+
+**Example – normalized S3 layout**
+
+```json
+{
+  "bucket": "nc-prod-data",
+  "key": "01HZX7K3M4A7W0E3V6S8R2N8C1/document_chunk/2025/10/28/01JB0GQW0A8Z7HQ8PRJ9TB9X1Z.jsonl",
+  "schema_urn": "urn:nc:schema:ingest.normalized:document_chunk:file",
+  "checksum_sha256": "sha256:abc123...",
+  "pii_flags": ["email", "name"],
+  "retention_class": "RC2"
+}
+```
 
   
 

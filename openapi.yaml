@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   description: >
     REST interface for ingest, query, admin, and security-action operations.
-    All endpoints require `Tenant-Id`, `Correlation-Id`, and authenticated callers (AWS SigV4 or JWT).
+    All business endpoints (excluding `/health`) require `Tenant-Id`, `Correlation-Id`, and authenticated callers (AWS SigV4 or JWT).
 servers:
   - url: https://api.neurocipher.io/v1
     description: Production
@@ -125,6 +125,10 @@ components:
               metadata:
                 type: object
                 additionalProperties: true
+        next_cursor:
+          type: string
+          nullable: true
+          description: Opaque cursor token for fetching the next page of results; null or omitted when there is no next page.
     ReindexRequest:
       type: object
       properties:
@@ -212,9 +216,26 @@ components:
         query: "privileged access policy"
         top_k: 5
         mode: hybrid
-        filters: {"doc_type":"policy"}
+        results:
+          - doc_id: "doc_123"
+            score: 0.92
+            title: "Privileged access baseline policy"
+            snippet: "All privileged accounts must follow baseline controls."
+            metadata:
+              source: "policy-repo"
+              tenant_id: "tn_01HZY3"
+        next_cursor: "opaque-cursor-token-01"
+    ErrorRateLimitedExample:
+      summary: Rate limit exceeded error
+      value:
+        error:
+          code: "RATE_LIMITED"
+          message: "Rate limit exceeded. Try again after reset."
+          correlation_id: "01J9Z4Q7A6M8T1N9ZK7N1A2B3C"
+          details:
+            retry_after_seconds: 60
 paths:
-  /v1/ingest/event:
+  /ingest/event:
     post:
       summary: Ingest new event or document
       description: Ingests a new raw event or document into the Neurocipher data pipeline for normalization, enrichment, and downstream embedding.
@@ -251,15 +272,26 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "429":
           description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorRateLimitedExample'
         "500":
           description: Server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/query:
+  /query:
     get:
       summary: Search normalized documents
       description: Performs hybrid vector and keyword search over normalized documents, applying relevance fusion and optional filters.
@@ -304,19 +336,35 @@ paths:
                   $ref: '#/components/examples/QueryExample'
         "400":
           description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "403":
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "429":
           description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "500":
           description: Server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/admin/reindex:
+  /admin/reindex:
     post:
       summary: Reindex normalized documents
       description: Schedules a reindex job over normalized documents for maintenance, backfill, or recovery scenarios.
@@ -339,15 +387,23 @@ paths:
           description: Reindex job accepted
         "403":
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "429":
           description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "500":
           description: Server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/security/actions:
+  /security/actions:
     post:
       summary: Submit security action command
       description: Submits a security action command to the Security Engine, such as quarantine, ticket creation, or notification.
@@ -380,8 +436,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "403":
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "409":
           description: Duplicate action_id detected
           content:
@@ -390,9 +454,17 @@ paths:
                 $ref: '#/components/schemas/SecurityActionResponse'
         "429":
           description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "500":
           description: Server error
-  /v1/security/actions/{id}:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /security/actions/{id}:
     get:
       summary: Fetch security action status
       description: Retrieves the latest status of a previously submitted security action command.
@@ -417,15 +489,23 @@ paths:
                 $ref: '#/components/schemas/SecurityActionStatus'
         "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "403":
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         "404":
           description: Action not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1/health:
+  /health:
     get:
       summary: Health and dependency check
       description: Returns liveness and dependency health status for the Neurocipher data pipeline API.

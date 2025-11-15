@@ -1,5 +1,11 @@
   
 
+id: SEC-001
+title: Threat Model and Mitigation Matrix
+owner: Security Engineering
+status: Approved for implementation
+last_reviewed: 2025-11-15
+
 SEC-001 Threat Model and Mitigation Matrix
 
   
@@ -357,7 +363,14 @@ flowchart TB
 
   
 
-  
+## Acceptance Criteria
+
+- STRIDE threats and mitigations are documented for API edge, ingest/ETL, vector store, identity and keys, and CI/CD flows, and reviewed with Security and Platform.
+- Primary mitigations from this document (WAF rules, Shield, S3 Object Lock, KMS policies, IAM boundaries, supply-chain controls) are implemented via IaC in the workload and security accounts.
+- Organization-wide CloudTrail, WAF/S3 access logs, GuardDuty, Config, Detective, and Security Hub are enabled with the retention and centralization model described in sections 6 and 10.
+- LLM-specific abuse cases (prompt injection, data poisoning, over-embedding, dependency confusion) have corresponding tests or guardrails wired into ingest/normalize/embed stages.
+- Residual risks in section 7 are explicitly accepted in the risk register and revisited at least annually.
+- Chaos experiments and tabletop exercises described in section 11 run at least once per year with issues tracked to closure.
 
   
 

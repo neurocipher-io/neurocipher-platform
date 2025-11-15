@@ -1,5 +1,11 @@
 
 
+id: OBS-001
+title: Observability Strategy and Telemetry Standards
+owner: Platform Engineering
+status: Approved
+last_reviewed: 2025-10-24
+
 OBS-001 Observability Strategy and Telemetry Standards
 
   
@@ -312,17 +318,16 @@ Runbook links
 
   
 
-- RB-ING-001 Ingest backlog.
-- RB-API-002 Elevated 5xx.
-- RB-VEC-003 Vector index latency.
-- RB-OPS-004 Cardinality spike.
+- [RB-ING-001 Ingest backlog](../runbooks/RB-ING-001.md).
+- [RB-API-002 Elevated 5xx](../runbooks/RB-API-002.md).
+- [RB-VEC-003 Vector index latency](../runbooks/RB-VEC-003.md).
+- [RB-OPS-004 Cardinality spike](../runbooks/RB-OPS-004.md).
 
   
 
   
 
   
-
 Ownership
 
   
@@ -667,7 +672,15 @@ Cost Controls
 - Sample verbose logs.
 - Compress Firehose streams.
 
-  
+### Acceptance Criteria
+
+- All in-scope services emit metrics, logs, and traces following the field and tag conventions in this spec (including `service`, `component`, `stage`, `region`, and `env`).
+- HTTP and async context propagation (`traceparent`, `tracestate`, `correlation_id`, `trace_id`) is implemented across ingestion, workers, vector store, and APIs.
+- The telemetry stack (ADOT, AMP, CloudWatch → Firehose → S3, OpenSearch, Grafana, Alertmanager) is deployed and wired together as described here.
+- Sampling, PII handling, retention, and cost-control policies (cardinality guardrails, log sampling, KMS encryption) are enforced for all production environments.
+- Security Engine events and actions include the required observability fields (`action_id`, `status_id`, `schema_urn`, `tenant_id`) in metrics, logs, and traces.
+
+---
 
 ---
 
@@ -785,18 +798,14 @@ Runbook Links
 
   
 
-RB-ING-001 Ingest Backlog
-
-RB-API-002 Elevated 5xx
-
-RB-VEC-003 Vector Latency
-
-RB-OPS-004 Cardinality Spike
+- [RB-ING-001 Ingest Backlog](../runbooks/RB-ING-001.md)
+- [RB-API-002 Elevated 5xx](../runbooks/RB-API-002.md)
+- [RB-VEC-003 Vector Latency](../runbooks/RB-VEC-003.md)
+- [RB-OPS-004 Cardinality Spike](../runbooks/RB-OPS-004.md)
 
   
 
   
-
 Ownership
 
   

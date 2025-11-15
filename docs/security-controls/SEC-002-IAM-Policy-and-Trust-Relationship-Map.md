@@ -1,5 +1,11 @@
   
 
+id: SEC-002
+title: IAM Policy and Trust Relationship Map
+owner: Security Engineering
+status: Draft for review
+last_reviewed: 2025-11-15
+
 SEC-002 IAM Policy and Trust Relationship Map
 
   
@@ -333,11 +339,13 @@ Define least-privilege identity structure, policy scope, and trust relationships
 
   
 
-  
+## Acceptance Criteria
 
-  
-
-  
+- The account and role taxonomy in section 3 is implemented across management, security, logs, and workload accounts with documented mappings for human, service, and external identities.
+- Permission boundaries (pb-etl, pb-fargate, pb-admin) and SCPs described in sections 4.1 and 4.2 are enforced in AWS Organizations and validated by configuration scans.
+- Federation via AWS Identity Center and OIDC/GitHub is configured so that no long-lived user access keys are required for CI/CD or admin workflows.
+- iam:PassRole and cross-account trust relationships follow the guardrails in sections 4 and 5, with Access Analyzer and Config rules reporting zero critical findings.
+- CloudTrail, GuardDuty, Config, and Security Hub controls for IAM and STS are enabled for all relevant accounts, with alerts routed to the security team.
 
   
 

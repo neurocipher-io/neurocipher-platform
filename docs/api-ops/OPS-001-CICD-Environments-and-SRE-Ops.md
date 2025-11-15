@@ -1,3 +1,9 @@
+id: OPS-001
+title: CI/CD, Environments, and SRE Ops
+owner: Platform
+status: Final v1.0
+last_reviewed: 2025-11-15
+
 # OPS-001 CI/CD, Environments, and SRE Ops
 
 Owner: Platform  

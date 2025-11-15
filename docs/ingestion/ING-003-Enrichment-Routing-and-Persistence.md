@@ -1,3 +1,9 @@
+id: ING-003
+title: Enrichment, Routing, and Persistence
+owner: Data Platform Engineering / Platform SRE / Vector Team
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # ING-003 — Enrichment, Routing, and Persistence
 
 **Document ID:** ING-003  

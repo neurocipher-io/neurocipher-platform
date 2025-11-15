@@ -1,3 +1,9 @@
+id: REL-002
+title: Monitoring, Alerting and Incident Response
+owner: Reliability Engineering
+status: Approved
+last_reviewed: 2025-10-24
+
 Document ID: REL-002
 
 Title: Monitoring, Alerting & Incident Response
@@ -267,5 +273,13 @@ Applies to all core AWS components: ingestion (API Gateway, Lambda, ECS), data s
   
 
 Alert thresholds, notification policies, or escalation trees require review by Reliability Engineering and approval from the CTO prior to deployment.
+
+## Acceptance Criteria
+
+- The observability stack (metrics, logs, traces, dashboards) described in this document is deployed for all in-scope services, with key metrics and SLOs wired into dashboards.
+- Alerting rules for pipeline failure, queue backlog, RDS replication lag, CPU exhaustion, security findings, and cost anomalies are implemented with correct routing (PagerDuty, Slack, FinOps) and tested.
+- Severity levels (P1–P4) and the incident response workflow are in active use; incidents are classified and handled according to the defined SLAs.
+- Weekly or monthly reliability reports and postmortem summaries are produced and retained as specified, with SLIs/SLOs tracked over time.
+- Changes to alert thresholds or escalation policies follow the change-control process and are approved by Reliability Engineering and the appropriate leadership.
 
   

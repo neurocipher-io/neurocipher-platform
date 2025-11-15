@@ -1,3 +1,9 @@
+id: ING-001
+title: Raw Ingestion Specification
+owner: Data Platform Engineering / SRE
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # ING-001 — Raw Ingestion Specification
 
 **Document ID:** ING-001  

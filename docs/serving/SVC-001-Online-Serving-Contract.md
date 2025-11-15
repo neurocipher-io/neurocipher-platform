@@ -1,8 +1,11 @@
-# Document ID: SVC-001
-**Title:** Online Serving Contract Overview  
-**Status:** Draft v0.1  
-**Owner:** platform-serving  
-**Last Reviewed:** 2025-11-09  
+id: SVC-001
+title: Online Serving Contract Overview
+owner: platform-serving
+status: Draft v0.1
+last_reviewed: 2025-11-09
+
+# SVC-001 Online Serving Contract
+
 **References:** SVC-001-Online-Serving-Contract-Specification.md, SRG-001, DCON-001, OBS-002
 
 ---
@@ -57,7 +60,11 @@ query PatientSnapshot($tenant: ID!, $id: ID!) {
 - All endpoints must emit OpenAPI/SDL artifacts stored in git and published through SRG-001 automation.  
 - Backward-incompatible changes require new URL/version plus migration plan documented in ADR.  
 - Auth: SigV4 + IAM for internal, OAuth for partner-facing; never mix across stages.  
-- Payload size hard limit 2 MB; reject larger requests with `413 Payload Too Large`.
+- Payload size hard limit 2 MB; reject larger requests with `413 Payload Too Large`.  
+- Standard headers for online serving endpoints: `Authorization`, `Tenant-Id`, `Correlation-Id`, and `Idempotency-Key` for mutating writes, aligned with `openapi.yaml` (`/query`, `/ingest/event`) and API-001.  
+- Pagination: cursor-based using `top_k` (or `limit`) query parameters and the `next_cursor` field in the response body, as defined in the `QueryResponse` schema.  
+- Error model: HTTP 4xx/5xx responses use the `ErrorResponse` envelope from `openapi.yaml` with stable error codes for INVALID_REQUEST (400), UNAUTHENTICATED (401), UNAUTHORIZED (403), RESOURCE_NOT_FOUND (404), CONFLICT (409), RATE_LIMITED (429), and INTERNAL/UNAVAILABLE (5xx).  
+- Quotas: default per-tenant QPS and burst limits must match the rate-limit header values (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`) and the plans defined in API-001 / OBS-003; overrides require documented exceptions.
 
 ## 6. Observability & SLOs
 - Availability ≥ 99.9%, p95 latency < 250 ms (search) / < 400 ms (hybrid).  
@@ -71,6 +78,13 @@ query PatientSnapshot($tenant: ID!, $id: ID!) {
 4. Obtain approvals from platform-serving owner plus impacted service owners (ops/owners.yaml).
 
 ## 8. Change Log
-| Version | Date | Summary |
-|---------|------|---------|
-| v0.1 | 2025-11-09 | Initial digest derived from SVC-001 specification |
+|| Version | Date | Summary |
+||---------|------|---------|
+|| v0.1 | 2025-11-09 | Initial digest derived from SVC-001 specification |
+
+## 9. Acceptance Criteria
+- All online query endpoints expose `Tenant-Id`, `Correlation-Id`, and (where applicable) `Idempotency-Key` headers and map 4xx/5xx errors to the shared `ErrorResponse` envelope in `openapi.yaml`.  
+- Effective QPS and burst limits per tenant follow the quotas defined in API-001 and are observable via rate-limit headers.  
+- Pagination behavior for `/query` and any related search endpoints matches the cursor and `next_cursor` semantics in the OpenAPI contract.  
+- SLOs for availability and latency are measured and surfaced in dashboards, with alerts pointing to RB-API-002 and RB-VEC-003.  
+- Any backward-incompatible surface change is shipped via a new versioned URL or alias and documented in the SVC-001 specification.

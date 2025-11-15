@@ -1,4 +1,10 @@
 
+id: TEST-001
+title: Testing and Quality Gates
+owner: QA Lead
+status: Accepted
+last_reviewed: 2025-10-24
+
 TEST-001 Testing & Quality Gates
 
   
@@ -248,6 +254,14 @@ Compliance Integration
   
 
   
+
+Acceptance Criteria
+
+- CI pipelines enforce the multi-layer testing strategy defined in this document (static analysis, unit, integration, e2e, security, and performance tests).
+- Coverage thresholds (≥ 85% line and branch coverage) and lint/security gates are configured as required checks on protected branches and block merges on failure.
+- Staging validation (E2E + load) is required and executed before any production promotion for in-scope services.
+- Test reports, coverage data, and gate outcomes are stored as artifacts (for example in S3/CodeBuild reports) for audit and troubleshooting.
+- Branch protection and notification (Slack, etc.) rules are in place so that failed gates are visible and actionable for developers.
 
 References
 

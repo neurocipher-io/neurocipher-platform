@@ -1,5 +1,11 @@
   
 
+id: SEG-001
+title: Security Engine — Production Specification
+owner: Security Engineering
+status: Ready for production implementation
+last_reviewed: 2025-11-15
+
 SEG-001 Security Engine — Production Specification
 
   

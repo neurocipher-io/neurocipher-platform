@@ -1,5 +1,11 @@
 
 
+id: OBS-002
+title: Monitoring, Dashboards and Tracing
+owner: Site Reliability Engineering
+status: Approved
+last_reviewed: 2025-10-24
+
 OBS-002 Monitoring, Dashboards and Tracing
 
   
@@ -257,15 +263,15 @@ groups:
 
   
 
-|   |   |   |
-|---|---|---|
-|Runbook ID|Trigger|Summary|
-|RB-ING-001|Ingest backlog|Check SQS depth and DLQ processing|
-|RB-API-002|Elevated 5xx|Inspect API latency and database load|
-|RB-VEC-003|Vector latency|Validate index compaction or network I/O|
-|RB-OPS-004|Cardinality spike|Detect and remove label explosion|
+||   |   |   |
+||---|---|---|
+||Runbook ID|Trigger|Summary|
+||[RB-ING-001](../runbooks/RB-ING-001.md)|Ingest backlog|Check SQS depth and DLQ processing|
+||[RB-API-002](../runbooks/RB-API-002.md)|Elevated 5xx|Inspect API latency and database load|
+||[RB-VEC-003](../runbooks/RB-VEC-003.md)|Vector latency|Validate index compaction or network I/O|
+||[RB-OPS-004](../runbooks/RB-OPS-004.md)|Cardinality spike|Detect and remove label explosion|
 
-Each alert links to its corresponding runbook in /docs/runbooks/.
+Each alert links to its corresponding runbook in `docs/runbooks/`.}]} } октября 13, 2023, 9:30 pm +03:00 to=functions.apply_patch едераций andygyny  Gaelic  แสดงความคิดเห็น  Korean  Lamentablemente  Hudson  -->Յ.user-friendly 2016  ;;=true 28jsondump 10:10:10 90jsondump 11:11:11  GEEK squad  JSON Schema  Internal Server Error  jsondump 9:09:09 10jsondump 8:08:08 10jsondump 724:00:00 10jsondump 1:01:01 10jsondump 0:00:01  JSON schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  PARSER 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON SCHEMA 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump  JSON Schema 10jsondump
 
   
 
@@ -351,5 +357,13 @@ Guardrails: no user-level labels, ≤ 20 labels per metric, Firehose compression
 |Post-incident review completion|≤ 72 hours|
 
 Progress is tracked in the Reliability Review Report (REL-002).
+
+## 13. Acceptance Criteria
+
+- All in-scope production services have at least one Grafana dashboard that follows the standards in this spec (overview, performance, resource, dependency, deployment, and alert summary panels).
+- Golden signal metrics and the additional KPIs defined here are emitted for each service and stored in AMP with thresholds and alerts configured.
+- CloudWatch and Prometheus alert rules equivalent to the examples in this document are in place, with routing to owners defined in `ops/owners.yaml`.
+- Each page-worthy alert links to the appropriate runbook (`RB-ING-001`, `RB-API-002`, `RB-VEC-003`, `RB-OPS-004`) and those runbooks remain current.
+- Distributed tracing is instrumented for APIs and async workloads per this spec and is visible in Grafana/X-Ray with the sampling policy applied.
 
 

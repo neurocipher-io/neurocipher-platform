@@ -1,3 +1,9 @@
+id: PERF-002
+title: Benchmark Results and Performance Validation Log
+owner: Platform SRE / QA Performance Engineering
+status: Final v1.0
+last_reviewed: 2025-11-06
+
 Document ID: PERF-002
 
 Title: Benchmark Results and Performance Validation Log

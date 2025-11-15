@@ -1,3 +1,8 @@
+id: ADR-011
+title: Performance and Cost Evaluation and Governance Record
+owner: Architecture Review Board (ARB) / Platform SRE / FinOps
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 ADR-011 — Performance and Cost Evaluation and Governance Record
 

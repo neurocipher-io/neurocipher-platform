@@ -1,3 +1,9 @@
+id: PROC-001
+title: Batch Processing Job Specification
+owner: Data Platform Lead / Pipeline Engineering
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # Document ID: PROC-001
 **Title:** Batch Processing Job Specification  
 **Status:** Final v1.0  

@@ -1,4 +1,10 @@
 
+id: DM-003
+title: Physical Schemas & Storage Map
+owner: Data Architecture
+status: Ready for review
+last_reviewed: 2025-10-28
+
 # **DM-003 Physical Schemas & Storage Map**
 
   
@@ -1005,7 +1011,7 @@ COMMENT ON COLUMN nc.asset.urn IS 'Provider neutral URN unique per tenant when i
 
   
 
-## **24. Acceptance criteria**
+## **24. Acceptance Criteria**
 
 - All tables, indexes, RLS policies exist as defined
     

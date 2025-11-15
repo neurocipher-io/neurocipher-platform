@@ -1,3 +1,9 @@
+id: API-001
+title: Edge and Gateway Architecture
+owner: Platform
+status: Final v1.0
+last_reviewed: 2025-11-15
+
 # API-001 Edge and Gateway Architecture
 
 **Owner**: Platform  

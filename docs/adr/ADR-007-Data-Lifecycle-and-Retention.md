@@ -1,4 +1,8 @@
-  
+id: ADR-007
+title: Data Lifecycle and Retention
+owner: Data Governance
+status: Proposed
+last_reviewed: 2025-10-23
 
 ADR-007 Data Lifecycle and Retention
 
@@ -78,3 +82,11 @@ Consequences
 - Predictable storage growth.
 - Automatic cleanup via lifecycle rules.
 - Restore possible within 48 h from Glacier.
+
+## Acceptance Criteria
+
+- S3 lifecycle policies are defined and applied to the relevant buckets so that raw, normalized, DLQ, and audit data follow the retention windows described in this ADR (including Glacier transitions where applicable).
+- Retention and lifecycle settings for embeddings, metadata, and audit logs are documented and aligned with DM-003, LAK-001, DR-001, and applicable compliance requirements.
+- Data retention behavior is validated periodically (e.g., via test objects and restore drills) to ensure objects move and expire according to policy.
+- Exceptions or deviations from the tiered lifecycle model (for example, tenant-specific retention) are documented and approved by Data Governance.
+- Once implemented and validated, the status of this ADR is updated from Proposed to Accepted and cross-referenced from relevant specs.

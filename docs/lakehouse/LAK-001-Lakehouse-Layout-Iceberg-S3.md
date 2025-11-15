@@ -1,3 +1,9 @@
+id: LAK-001
+title: Lakehouse Layout (Iceberg/S3)
+owner: Data Platform Engineering / Data Architecture Lead
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # LAK-001 — Lakehouse Layout (Iceberg/S3)
 
 **Document ID:** LAK-001  

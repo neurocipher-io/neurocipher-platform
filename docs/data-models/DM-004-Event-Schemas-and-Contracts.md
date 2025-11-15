@@ -2,6 +2,12 @@ Yes. Here is the board-ready DM-004 with full detail and no missing criticals.
 
   
 
+id: DM-004
+title: Event Schemas & Contracts
+owner: Data Architecture
+status: Ready for review
+last_reviewed: 2025-10-28
+
 # **DM-004 Event Schemas & Contracts**
 
   
@@ -670,7 +676,7 @@ WHERE id = $payload->>'id' AND status <> 'OPEN';
 
   
 
-## **19. Acceptance criteria**
+## **19. Acceptance Criteria**
 
 - Envelope matches section 5 and validates against meta schema.
     

@@ -1,3 +1,9 @@
+id: DM-005
+title: Governance, Versioning & Migrations
+owner: Data Architecture
+status: Ready for review
+last_reviewed: 2025-10-28
+
 # **DM-005 Governance, Versioning & Migrations**
 
   
@@ -489,7 +495,7 @@ ALTER TYPE nc.status_finding ADD VALUE IF NOT EXISTS 'RISK_ACCEPTED';
 
   
 
-## **16. Acceptance criteria**
+## **16. Acceptance Criteria**
 
 - A governed process exists and is followed for all changes.
     

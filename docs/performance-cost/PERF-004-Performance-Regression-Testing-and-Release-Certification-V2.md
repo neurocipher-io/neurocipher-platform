@@ -1,3 +1,8 @@
+id: PERF-004
+title: Performance Regression Testing and Release Certification
+owner: QA Performance Engineering / Platform SRE
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 PERF-004 — Performance Regression Testing and Release Certification
 

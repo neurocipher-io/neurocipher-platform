@@ -1,4 +1,8 @@
-
+id: PERF-003
+title: Continuous Performance Monitoring and Optimization Framework
+owner: Platform SRE / FinOps / Performance Engineering
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 PERF-003 — Continuous Performance Monitoring and Optimization Framework
 

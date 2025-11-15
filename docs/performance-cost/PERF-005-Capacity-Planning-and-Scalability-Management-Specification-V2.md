@@ -1,3 +1,8 @@
+id: PERF-005
+title: Capacity Planning and Scalability Management Specification
+owner: Platform SRE / FinOps / Infrastructure Architecture
+status: Final v1.0
+last_reviewed: 2025-11-06
 
 PERF-005 — Capacity Planning and Scalability Management Specification
 

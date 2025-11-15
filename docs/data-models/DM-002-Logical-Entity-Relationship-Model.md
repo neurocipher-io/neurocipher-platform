@@ -1,3 +1,9 @@
+id: DM-002
+title: Logical Entity-Relationship Model
+owner: Data Architecture
+status: Ready for review
+last_reviewed: 2025-10-28
+
 DM-002 Logical Entity-Relationship Model
 
   
@@ -398,7 +404,7 @@ HAVING COUNT(*) = 1;
 
   
 
-## **19. Acceptance criteria**
+## **19. Acceptance Criteria**
 
 - All tenant-scoped entities carry account_id.
     

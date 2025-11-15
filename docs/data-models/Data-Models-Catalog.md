@@ -1,4 +1,10 @@
 
+id: DM-CATALOG
+title: Domain Model Catalog (Legacy)
+owner: Data Architecture
+status: Deprecated (superseded by DM-001–DM-005)
+last_reviewed: 2025-11-15
+
 # Domain Model Catalog
 
   
@@ -120,8 +126,14 @@
 ### DeletionRequest
 
 - id, target_type, target_id, reason, state, created_at, closed_at
-
   
+## Acceptance Criteria
+
+- This catalog is clearly marked as legacy and points readers to DM-001–DM-005 as the canonical data model specifications.
+- Any new data modeling or storage design work is reviewed against DM-001–DM-005 and DM-003 physical schemas rather than relying solely on the DynamoDB and CloudEvents patterns in this document.
+- References from other docs treat this file as historical context only; normative contracts live in DM-001–DM-005 and DCON-001.
+
+2) ERD and Storage Schemas.md
 
 2) ERD and Storage Schemas.md
 

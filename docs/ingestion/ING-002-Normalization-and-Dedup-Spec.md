@@ -1,3 +1,9 @@
+id: ING-002
+title: Normalization, Deduplication, and Canonicalization
+owner: Data Platform Engineering / Data Engineering
+status: Final v1.0
+last_reviewed: 2025-11-07
+
 # ING-002 — Normalization, Deduplication, and Canonicalization
 
 **Document ID:** ING-002  

@@ -2,6 +2,12 @@
 
   
 
+id: CI-001
+title: Continuous Integration Platform and Workflow Specification
+owner: Release Engineering, QA Lead, Security Lead
+status: Draft for review
+last_reviewed: 2025-11-15
+
 CI/CL-001 — Continuous Integration Platform and Workflow Specification
 
   
