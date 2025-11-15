@@ -12,6 +12,17 @@ servers:
     description: Staging
   - url: http://localhost:8000/v1
     description: Local development
+tags:
+  - name: ingest
+    description: Ingestion endpoints for raw events and documents.
+  - name: query
+    description: Query endpoints for searching normalized content.
+  - name: admin
+    description: Administrative endpoints for reindexing and maintenance.
+  - name: security
+    description: Security Engine integration endpoints for actions and status.
+  - name: health
+    description: Liveness and dependency health checks.
 components:
   securitySchemes:
     SigV4Auth:
@@ -206,6 +217,8 @@ paths:
   /v1/ingest/event:
     post:
       summary: Ingest new event or document
+      description: Ingests a new raw event or document into the Neurocipher data pipeline for normalization, enrichment, and downstream embedding.
+      tags: [ingest]
       operationId: ingestEvent
       security:
         - SigV4Auth: []
@@ -249,6 +262,8 @@ paths:
   /v1/query:
     get:
       summary: Search normalized documents
+      description: Performs hybrid vector and keyword search over normalized documents, applying relevance fusion and optional filters.
+      tags: [query]
       operationId: queryDocuments
       security:
         - SigV4Auth: []
@@ -304,6 +319,8 @@ paths:
   /v1/admin/reindex:
     post:
       summary: Reindex normalized documents
+      description: Schedules a reindex job over normalized documents for maintenance, backfill, or recovery scenarios.
+      tags: [admin]
       operationId: adminReindex
       security:
         - SigV4Auth: []
@@ -333,6 +350,8 @@ paths:
   /v1/security/actions:
     post:
       summary: Submit security action command
+      description: Submits a security action command to the Security Engine, such as quarantine, ticket creation, or notification.
+      tags: [security]
       operationId: createSecurityAction
       security:
         - SigV4Auth: []
@@ -376,6 +395,8 @@ paths:
   /v1/security/actions/{id}:
     get:
       summary: Fetch security action status
+      description: Retrieves the latest status of a previously submitted security action command.
+      tags: [security]
       operationId: getSecurityAction
       security:
         - SigV4Auth: []
@@ -407,6 +428,8 @@ paths:
   /v1/health:
     get:
       summary: Health and dependency check
+      description: Returns liveness and dependency health status for the Neurocipher data pipeline API.
+      tags: [health]
       operationId: healthCheck
       parameters:
         - $ref: '#/components/parameters/CorrelationId'
