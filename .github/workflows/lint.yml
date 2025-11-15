@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm i -g @stoplight/spectral-cli
-      - run: spectral lint -r spectral:oas openapi.yaml
+      - run: spectral lint -r .spectral.yaml openapi.yaml
 
   links:
     runs-on: ubuntu-latest
