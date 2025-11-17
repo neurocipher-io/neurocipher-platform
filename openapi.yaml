@@ -4,7 +4,8 @@ info:
   version: "1.0.0"
   description: >
     REST interface for ingest, query, admin, and security-action operations.
-    All business endpoints (excluding `/health`) require `Tenant-Id`, `Correlation-Id`, and authenticated callers; JWT (OIDC) is the primary entry point while SigV4 is available only as a service-to-service fallback.
+    All business endpoints (excluding `/health`) require `Tenant-Id`, `Correlation-Id`, and authenticated callers.
+    JWT (OIDC) is the primary entry point while SigV4 is only a limited service-to-service fallback.
     Error responses follow docs/api-ops/API-Error-Catalog.md.
 servers:
   - url: https://api.neurocipher.io/v1
@@ -56,7 +57,30 @@ components:
       required: true
       schema:
         type: string
-      description: Required for all mutating requests; ULID or UUID v4
+      description: >
+        Required for all mutating requests; ULID or UUID v4.
+        The key is scoped to the tenant, API route, and payload fingerprint.
+        It is stored for 24 hours and tied to the conflict semantics in docs/api-ops/API-001-Edge-and-Gateway-Architecture.md
+        and docs/api-ops/API-Error-Catalog.md.
+    PageSize:
+      name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+      description: >
+        Number of items to return in paged list responses; defaults to 50 and cannot exceed 200.
+        Pass the value back with each page to keep the page size stable.
+    NextCursor:
+      name: next_cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Opaque cursor from the prior page response; omit or null to fetch the first page.
   schemas:
     ErrorResponse:
       type: object
@@ -75,6 +99,23 @@ components:
           required:
             - code
             - message
+    PaginationMetadata:
+      type: object
+      properties:
+        page_size:
+          type: integer
+          description: Page size requested via the `page_size` query parameter.
+          minimum: 1
+          maximum: 200
+        next_cursor:
+          type: string
+          nullable: true
+          description: Opaque cursor for the next page.
+        has_more:
+          type: boolean
+          description: True when more pages exist after this cursor.
+      required:
+        - page_size
     IngestRequest:
       type: object
       required:
@@ -123,13 +164,15 @@ components:
                 type: string
               snippet:
                 type: string
-              metadata:
-                type: object
-                additionalProperties: true
+            metadata:
+              type: object
+              additionalProperties: true
+        pagination:
+          $ref: '#/components/schemas/PaginationMetadata'
         next_cursor:
           type: string
           nullable: true
-          description: Opaque cursor token for fetching the next page of results; null or omitted when there is no next page.
+          description: Legacy shortcut for `pagination.next_cursor`; prefer the pagination block.
     ReindexRequest:
       type: object
       properties:
@@ -225,6 +268,10 @@ components:
             metadata:
               source: "policy-repo"
               tenant_id: "tn_01HZY3"
+        pagination:
+          page_size: 50
+          next_cursor: "opaque-cursor-token-01"
+          has_more: true
         next_cursor: "opaque-cursor-token-01"
     ErrorRateLimitedExample:
       summary: Rate limit exceeded error
@@ -256,6 +303,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: Resource under the tenant was not found; API-Error-Catalog code `RESOURCE_NOT_FOUND`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Idempotency conflict or duplicate resource; API-Error-Catalog code `CONFLICT`.
       content:
         application/json:
           schema:
@@ -304,6 +357,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/TenantId'
         - $ref: '#/components/parameters/CorrelationId'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/NextCursor'
         - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
@@ -325,6 +380,8 @@ paths:
           $ref: '#/components/responses/InvalidRequest'
         "401":
           $ref: '#/components/responses/Unauthenticated'
+        "409":
+          $ref: '#/components/responses/Conflict'
         "429":
           $ref: '#/components/responses/RateLimited'
         "500":
@@ -405,6 +462,8 @@ paths:
           description: Reindex job accepted
         "403":
           $ref: '#/components/responses/Unauthorized'
+        "409":
+          $ref: '#/components/responses/Conflict'
         "429":
           $ref: '#/components/responses/RateLimited'
         "500":

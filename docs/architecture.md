@@ -64,7 +64,7 @@ flowchart LR
 
   N --> S3N[(S3 normalized)]
 
-  N --> DDB[(DynamoDB metadata)]
+  N --> PGMeta[(Postgres metadata)]
 
   N --> E[SQS embed]
 
@@ -78,7 +78,7 @@ flowchart LR
 
   WU --> OS[(OpenSearch index)]
 
-  WU --> DDB
+  WU --> PGMeta
 
   
 
@@ -91,7 +91,7 @@ flowchart LR
 
     API --> OS
 
-    API --> DDB
+    API --> PGMeta
 
   end
 
@@ -137,7 +137,7 @@ flowchart TB
 
       S3N[(S3 norm)]
 
-      DDB[(DynamoDB)]
+  PGMeta[(Postgres metadata)]
 
       WV[(Weaviate)]
 
@@ -183,7 +183,7 @@ sequenceDiagram
 
   participant S3 as S3 raw and norm
 
-  participant DDB as DynamoDB meta
+  participant PGMeta as Postgres metadata
 
   participant EMB as Embed Worker
 
@@ -203,7 +203,7 @@ sequenceDiagram
 
   Norm->>S3: Write raw and normalized
 
-  Norm->>DDB: Upsert metadata
+  Norm->>PGMeta: Upsert metadata
 
   Norm->>SQS: Enqueue embed task
 
@@ -444,9 +444,9 @@ batch
   
 
 - dp-ingest-exec: SQS SendMessage, logs
-- dp-normalize-exec: S3 PutObject, DDB PutItem, SQS SendMessage, KMS Decrypt
-- dp-embed-exec: Weaviate write, OpenSearch write, DDB UpdateItem, S3 GetObject
-- dp-api-exec: Weaviate query, OpenSearch query, DDB Query, limited S3 GetObject
+- dp-normalize-exec: S3 PutObject, Postgres metadata insert/upsert, SQS SendMessage, KMS Decrypt
+- dp-embed-exec: Weaviate write, OpenSearch write, Postgres metadata update, S3 GetObject
+- dp-api-exec: Weaviate query, OpenSearch query, Postgres metadata query, limited S3 GetObject
 
   
 

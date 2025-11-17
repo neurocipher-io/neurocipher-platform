@@ -45,6 +45,11 @@ Assumptions: ULIDs as text, UTC timestamps, RLS for tenancy, PgBouncer in front 
 
 Tenant context validation and quota guardrails align with docs/security-controls/SEC-005-Multitenancy-Policy.md.
 
+## **2.1 Metadata store**
+
+- Per ADR-001 and DM-001, the canonical metadata catalog (asset, source_document, ingestion_job, scan, finding, evidence, etc.) lives in PostgreSQL (`nc.*` schema) with RLS enforcing tenant identity.
+- This Postgres metadata store is the single view for control-plane signals, lineage, and operational reporting; DynamoDB hosts auxiliary workloads (idempotency guard, temporary caches) but is not the canonical metadata engine.
+
   
 
 ## **3. Non-functional requirements**

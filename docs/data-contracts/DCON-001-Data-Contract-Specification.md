@@ -157,7 +157,7 @@ In scope: event payloads, S3 file layouts, Iceberg table specs, Weaviate classes
 
 - Kinds: file schemas describe normalized file layouts and metadata for ingestion buckets.
 - Storage Layout: Stored in SRG with URN and SemVer under schemas/{namespace}/{name}/file/vX.Y.Z/schema.json.  
-- Required Meta: checksum_sha256, mime, pii_flags, policy, timestamps, as recorded in DDB metadata (contract links to DM-003).  
+- Required Meta: checksum_sha256, mime, pii_flags, policy, timestamps, as recorded in the Postgres metadata tables (contract links to DM-003).  
 
 **Example – normalized S3 layout**
 
@@ -414,7 +414,7 @@ Services return RFC-7807 Problem JSON for validation failures; include invalid_p
 
   
 
-- Metrics: registry.read.latency_ms p50/p95/p99, read/write TPS, validation.failures.rate, active version counts, cache hit rate, DDB RCUs/WCUs.  
+- Metrics: registry.read.latency_ms p50/p95/p99, read/write TPS, validation.failures.rate, active version counts, cache hit rate, and Postgres metadata query latency plus connection pool usage.  
 - Dashboards & Alerts: Conform to OBS-001..003 golden signals and burn-rate policies.    
 
   
@@ -682,7 +682,7 @@ Appendix D — Observability Panel Checklist
 
   
 
-Include latency histograms, TPS, validation failure rate, cache hit, DDB throttles, KMS sign latency, and event delivery failures. Wire alerts to on-call per OBS-002/003.   
+Include latency histograms, TPS, validation failure rate, cache hit, Postgres metadata connection saturation, KMS sign latency, and event delivery failures. Wire alerts to on-call per OBS-002/003.   
 
   
 

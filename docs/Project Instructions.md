@@ -258,7 +258,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
   
 
 - Model selector by modality and token budget.
-- Store vectors in Weaviate. Store raw in S3. Store metadata in DynamoDB.
+- Store vectors in Weaviate. Store raw in S3. Store metadata in the Postgres metadata catalog (see DM-003).
 - Batch size and concurrency controlled by SQS visibility.
 
   

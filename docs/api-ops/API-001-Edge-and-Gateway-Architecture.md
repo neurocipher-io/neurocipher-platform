@@ -167,11 +167,9 @@ Tenant-Id format, isolation controls, and quota routing live in docs/security-co
 
 **Pagination**
 
-- Cursor based
-    
-- `?limit=50&after=<cursor>`
-    
-- `limit` max 200. Default 50
+- Shared pagination metadata includes `page_size` (default 50, max 200) and `next_cursor` returned in the response metadata; all pageable endpoints use the same `PaginationMetadata` contract in `openapi.yaml`.
+- Controls: cursor-based only, `page_size`/`limit` controls the number of results (default 50, max 200), and the opaque `next_cursor` tags the following page; clients should pass the prior response’s cursor back via the `next_cursor` parameter and not mutate it.
+- Sorting and filtering remain stable: `sort=field` or `sort=-field` (ties resolved by id), and `filter[field]=value` or range filters (`filter[field][gte]`, `filter[field][lte]`). The pagination metadata in the response (and `next_cursor`) is tenant-scoped.
     
 
 **Filtering and sort**
@@ -185,20 +183,27 @@ Tenant-Id format, isolation controls, and quota routing live in docs/security-co
 
 ---
 
-## 7. Idempotency
+## 7. Idempotency semantics
 
-**Scope**: All non GET write operations.  
-**Storage**: DynamoDB table `idempotency_store` with 24 hour TTL.  
-**Key**: Hash of `Idempotency-Key` + route + tenant + body hash.  
-**Behavior**
+**Scope**
 
-- First request executes and stores response code, body hash, headers subset, expiry, and execution fingerprint
-    
-- Subsequent requests return stored response with `Idempotent-Replay: true`
-    
-- Safe to retry on 5xx or network failure
-    
-- Not applied to endpoints marked as non idempotent in spec
+- Applies to all tenant-scoped mutations that require `Idempotency-Key` (ingest events, admin reindex jobs, security actions). The key scope is bound to the tenant (`Tenant-Id`), HTTP method, canonical route, and a hash of the request body so clients may safely reuse the same key within the same tenant and endpoint, but never across tenants or routes.
+
+**Storage and cleanup**
+
+- A DynamoDB table named `idempotency_store` records each key along with the route, tenant, payload fingerprint, cached response payload, and expiry timestamp. The TTL is fixed at 24 hours so entries automatically expire; a nightly cleanup job prunes tombstones to keep the table compact.
+- Stored responses include the original status code, a minimal header subset, and `Idempotent-Replay: true` so replayed requests can differentiate cached replies from fresh executions.
+
+**Conflict behavior**
+
+- When a repeat request arrives with the same key and an identical payload fingerprint, the cached response is returned with `Idempotent-Replay: true`. When the payload or route differs but the key matches, the gateway rejects the call with `409 CONFLICT` (see `docs/api-ops/API-Error-Catalog.md`), because the operation cannot be safely retried.
+- `409 CONFLICT` serves as the “already processed” signal; `400 INVALID_REQUEST` still denotes schema or header issues, while `401/403`, `429`, and `5xx` retain their usual semantics.
+- Security action endpoints surface this guard via their existing `409` response: the `SecurityActionResponse` includes `status: duplicate` when the same `action_id`/key pair is replayed.
+
+**Retry guidance**
+
+- Retry idempotent writes only on `500 INTERNAL` or `503 UNAVAILABLE` and then only once after a delay; `409 CONFLICT` indicates a divergent payload and must not be retried without a new key.
+
     
 
 ---

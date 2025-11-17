@@ -13,8 +13,8 @@ This file provides guidance to WARP (warp.dev) when working with code and config
 - **Ingest → Normalize → Embed → Query**
 
   - Sources (S3 file drops, webhooks, API pulls, DB dumps) enqueue into an SQS ingest queue.
-  - A normalize Lambda reads from SQS, writes raw and normalized objects to S3, upserts metadata into DynamoDB, and enqueues embed tasks.
-  - Embed workers on ECS Fargate batch process embed tasks, call embedding models, and upsert into Weaviate (vectors) and OpenSearch Serverless (keyword index) while updating DynamoDB.
+  - A normalize Lambda reads from SQS, writes raw and normalized objects to S3, upserts metadata into the Postgres metadata catalog (nc.source_document, nc.document_chunk, etc.), and enqueues embed tasks.
+  - Embed workers on ECS Fargate batch process embed tasks, call embedding models, and upsert into Weaviate (vectors) and OpenSearch Serverless (keyword index) while syncing Postgres metadata updates.
   - A FastAPI-based query API (Fargate) performs vector and keyword search, fuses results (reciprocal rank fusion), and returns hybrid responses.
 
 - **Core services** (see `docs/architecture.md` and `docs/System-Architecture-Blueprint.md`):
@@ -28,7 +28,7 @@ This file provides guidance to WARP (warp.dev) when working with code and config
 - **Security and network**
 
   - All compute runs in private subnets behind ALB or API Gateway.
-  - VPC endpoints for S3, Secrets Manager, DynamoDB, and other managed services.
+  - VPC endpoints for S3, Secrets Manager, RDS (Postgres metadata), and other managed services.
   - Secrets live in AWS Secrets Manager; KMS keys per environment; IAM roles are scoped per service.
   - Threat model and mitigations are defined in `docs/security-controls/SEC-001-Threat-Model-and-Mitigation-Matrix.md`.
 
