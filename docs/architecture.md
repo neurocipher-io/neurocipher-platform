@@ -28,7 +28,77 @@ Foundation for AWS native ingestion, normalization, embeddings, and hybrid retri
 
   
 
-## 2. High level diagram
+## 2. Context diagram
+
+Context-level boundaries are captured in `docs/architecture/context-diagram.mmd`; the following Mermaid diagram illustrates the platform’s interaction with clients, ingestion, and the vector/search plane.
+
+```mermaid
+flowchart LR
+    subgraph External
+        Client[Clients & Partners]
+        Events[Partner Event Webhooks]
+    end
+
+    subgraph Platform
+        API[API Gateway & FastAPI]
+        Normalize[Normalize Lambda]
+        Embed[Embed Workers (Fargate)]
+        Security[Security Engine]
+        Vector[Weaviate `NcChunkV1`]
+        Search[OpenSearch]
+        Lake[Postgres + S3 + Iceberg]
+    end
+
+    Client --> API
+    Events --> Normalize
+    API --> Normalize
+    Normalize --> Lake
+    Normalize --> Embed
+    Embed --> Vector
+    Embed --> Search
+    API --> Security
+    API --> Vector
+    API --> Search
+    API --> Lake
+````
+
+## 3. Container diagram
+
+Container-level responsibilities for ingest, normalization, embedding, API, and security modules are detailed in `docs/architecture/container-diagram.mmd`. The Mermaid diagram below mirrors that file.
+
+```mermaid
+flowchart TB
+    subgraph Ingest Tier
+        IngestAPI[Ingest API Gateway]
+        Normalize[Normalize Lambda]
+    end
+
+    subgraph Data Plane
+        Lake[Postgres / Iceberg / S3]
+        Vector[Weaviate NcChunkV1]
+        OpenSearch[OpenSearch Serverless]
+    end
+
+    subgraph Control Plane
+        API[FastAPI Query Service]
+        Security[Security Engine Module]
+        Batch[Reindex & Batch Jobs]
+    end
+
+    IngestAPI --> Normalize
+    Normalize --> Lake
+    Normalize --> Vector
+    Normalize --> OpenSearch
+    Batch --> Lake
+    Batch --> Vector
+    Batch --> OpenSearch
+    API --> Vector
+    API --> OpenSearch
+    API --> Lake
+    API --> Security
+````
+
+## 4. High level diagram
 
 ```mermaid
 

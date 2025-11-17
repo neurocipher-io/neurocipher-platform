@@ -24,6 +24,8 @@ last_reviewed: 2025-11-15
 
 Standardize releases. Reduce risk. Ensure fast rollback. Preserve full audit evidence.
 
+Release readiness checks depend on the capacity/cost envelope recorded in `docs/CAP-001-Capacity-Model.md` (QPS, queue depth, Weaviate throughput).
+
   
 
 ## **2. Scope**

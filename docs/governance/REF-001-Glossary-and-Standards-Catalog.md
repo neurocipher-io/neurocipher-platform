@@ -313,6 +313,23 @@ Terms are normative.
 |Restricted|Highest sensitivity or regulated|Credentials, keys|HSM or KMS, tight network policy, break glass only, quarterly access review|
 
 - PII and Restricted data cannot be used in non prod without anonymization or synthetic fixtures.
+
+### **8.1 PII tiers and masking**
+
+| Level | Scope | Raw ingestion | Normalized payload | Analytics exports | Logging / metrics |
+|---|---|---|---|---|---|
+| **P0** | Secrets, private keys, unencrypted credentials | Reject ingestion | Never persisted | Never exported | Never logged |
+| **P1** | Highly sensitive PII (SSN, PCI) | Store in encrypted S3, flagged | Hash/tokenize (DQ guard) | Only aggregated metrics | Hash or redact; no raw values |
+| **P2** | Standard PII (email, name, identifiers) | Allowed with detection | Pseudonymize / slugify | Allowed after masking | Hash or pseudonym |
+| **P3** | Public metadata | No restrictions | Allowed | Allowed | Raw logging |
+
+### **8.2 Detection & redaction automation**
+
+- Raw ingestion runs Macie scans, regex-based detectors, and ADOT processors to flag `pii_flags` (per DQ-001). Templates from `docs/governance/REF-001` map to Macie rules and `dq.mask` policies.
+- Normalization pipelines apply hashing/tokenization functions (`hash_value`, `tokenize_token`) defined in `libs/python` and documented in DQ-001/ING-003 to meet P1/P2 masking.
+- Logs and metrics drop P1/P2 values unless hashed; `OBS-001` enumerates the required `tenant_id`, `service`, and telemetry tags.
+
+All ingestion, normalization, and analytics specs (DCON-001, ING-002, PROC-003) must cite this table in their acceptance criteria and mention the detection/redaction automation above.
     
 
   

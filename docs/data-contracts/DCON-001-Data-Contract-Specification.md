@@ -216,6 +216,13 @@ In scope: event payloads, S3 file layouts, Iceberg table specs, Weaviate classes
 
 - Format: format=openapi for public service surfaces. Changes follow compatibility_mode=none unless explicitly relaxed; clients pin exact versions.  
 
+6.6 Data classification & masking
+
+
+- All API and event contracts must declare the classification level (P0–P3) per `docs/governance/REF-001-Glossary-and-Standards-Catalog.md §8`. Normalized payloads record `pii_flags`, and the DQ-001 mask rules determine whether hashing, tokenization, or rejection is required.
+- Detection hinges on Macie, regex, and ADOT processors while logs drop raw P1/P2 values unless hashed to satisfy OBS-001/OBS-002 telemetry requirements.
+- Acceptance criteria must cite the classification table and prove masking automation before decks move to REL-002 reviews.
+
   
 
   
@@ -464,6 +471,7 @@ Services return RFC-7807 Problem JSON for validation failures; include invalid_p
 - CI gates enforce contract tests and checksum presence; failures block merges.  
 - Dashboard shows registry latency, error rates, cache hit rate, and active versions; alerts wired to on-call.  
 - Change requests show approvals and evidence per GOV-002.  
+- Classification compliance checklist references `REF-001 §8` and demonstrates PII masking levels (P1/P2) via DQ-001 masking rules before contracts are promoted.
 
   
 

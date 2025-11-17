@@ -20,7 +20,7 @@ Applies to: Neurocipher Core pipeline (see docs/integrations/)
 
 Last Reviewed: 2025-11-06
 
-References: PERF-001–004, OPS-001, CI/CL-003, ADR-009, REL-001, REL-002
+References: PERF-001–004, OPS-001, CI/CL-003, ADR-009, REL-001, REL-002, CAP-001
 
   
 

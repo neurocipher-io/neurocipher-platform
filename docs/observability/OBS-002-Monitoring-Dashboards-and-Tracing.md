@@ -32,6 +32,8 @@ Tags: monitoring / dashboards / tracing / observability / reliability
 
 Establish a single standard for metrics, dashboards, and distributed tracing across the Neurocipher Pipeline and external orchestrator (see docs/integrations/README.md) systems. The goal is full situational awareness, fast anomaly detection, and consistent telemetry across all services.
 
+This observability pattern is parameterized by the capacity/cost assumptions in `docs/CAP-001-Capacity-Model.md`; the KPIs below inherit the same QPS, queue, and Weaviate throughput targets referenced by OBS-001.
+
   
 
   
@@ -332,4 +334,3 @@ Progress is tracked in the Reliability Review Report (REL-002).
 - CloudWatch and Prometheus alert rules equivalent to the examples in this document are in place, with routing to owners defined in `ops/owners.yaml`.
 - Each page-worthy alert links to the appropriate runbook (`RB-ING-001`, `RB-API-002`, `RB-VEC-003`, `RB-OPS-004`) and those runbooks remain current.
 - Distributed tracing is instrumented for APIs and async workloads per this spec and is visible in Grafana/X-Ray with the sampling policy applied.
-
