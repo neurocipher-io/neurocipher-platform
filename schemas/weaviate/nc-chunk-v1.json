@@ -1,0 +1,23 @@
+{
+  "class": "NcChunkV1",
+  "description": "Chunk-level vectors for Neurocipher documents (nc.document_chunk), v1.",
+  "multiTenancyConfig": { "enabled": true },
+  "replicationConfig": { "factor": 3 },
+  "shardingConfig": { "virtualPerPhysical": 128 },
+  "vectorIndexType": "hnsw",
+  "vectorIndexConfig": {
+    "efConstruction": 128,
+    "maxConnections": 64,
+    "ef": 64
+  },
+  "vectorizer": "none",
+  "properties": [
+    { "name": "chunk_id",           "dataType": ["text"], "description": "nc.document_chunk.id" },
+    { "name": "source_document_id", "dataType": ["text"], "description": "nc.source_document.id" },
+    { "name": "ord",                "dataType": ["int"],  "description": "Chunk ordinal within source_document" },
+    { "name": "text",               "dataType": ["text"], "description": "Chunk text" },
+    { "name": "token_count",        "dataType": ["int"],  "description": "Approximate token count" },
+    { "name": "retention_class",    "dataType": ["text"], "description": "Retention class (RC1..RC4) from nc.source_document" },
+    { "name": "created_at",         "dataType": ["date"], "description": "Chunk creation timestamp from nc.document_chunk.created_at" }
+  ]
+}

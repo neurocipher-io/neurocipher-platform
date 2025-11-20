@@ -323,20 +323,30 @@ CREATE POLICY p_document_chunk_tenant ON nc.document_chunk USING (account_id = n
 
 ### **6.10 embedding_ref**
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS nc.embedding_ref (
   id                text PRIMARY KEY,
   account_id        text NOT NULL REFERENCES nc.account(id),
   document_chunk_id text NOT NULL REFERENCES nc.document_chunk(id),
   weaviate_class    text NOT NULL,
   weaviate_uuid     text NOT NULL,
+  model_key         text NOT NULL,
   vector_dim        int  NOT NULL,
   created_at        timestamptz NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ux_embedding_chunk ON nc.embedding_ref(document_chunk_id);
-CREATE INDEX IF NOT EXISTS ix_embedding_tenant ON nc.embedding_ref(account_id, weaviate_class);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_embedding_chunk
+  ON nc.embedding_ref(document_chunk_id);
+
+CREATE INDEX IF NOT EXISTS ix_embedding_tenant
+  ON nc.embedding_ref(account_id, weaviate_class);
+
+CREATE INDEX IF NOT EXISTS ix_embedding_model
+  ON nc.embedding_ref(account_id, model_key);
+
 ALTER TABLE nc.embedding_ref ENABLE ROW LEVEL SECURITY;
-CREATE POLICY p_embedding_ref_tenant ON nc.embedding_ref USING (account_id = nc.current_account_id());
+CREATE POLICY p_embedding_ref_tenant
+  ON nc.embedding_ref USING (account_id = nc.current_account_id());
 ```
 
 ### **6.11 ingestion_job**
@@ -756,9 +766,9 @@ s3://nc-<env>-data/{account_id}/{entity}/{yyyy}/{MM}/{dd}/{ulid}.jsonl
 
 ## **11. Weaviate classes and HA tuning**
 
-  
+Multi-tenancy enabled. Tenant equals account_id. NcChunkV1 does not store account_id as a property; tenant isolation is enforced exclusively via `multiTenancyConfig` with tenant name = account_id.
 
-Multi-tenancy enabled. Tenant equals account_id.
+Canonical machine-readable schema lives at `schemas/weaviate/nc-chunk-v1.json`.
 
 ```
 {
@@ -775,7 +785,8 @@ Multi-tenancy enabled. Tenant equals account_id.
     { "name": "ord", "dataType": ["int"] },
     { "name": "text", "dataType": ["text"] },
     { "name": "token_count", "dataType": ["int"] },
-    { "name": "retention_class", "dataType": ["text"] }
+    { "name": "retention_class", "dataType": ["text"] },
+    { "name": "created_at", "dataType": ["date"] }
   ]
 }
 ```
@@ -789,7 +800,50 @@ Indexing contract
 - Delete in Weaviate only after embedding_ref delete
     
 
-  
+### **11.1 Search index (OpenSearch nc-chunk-v1)**
+
+OpenSearch hosts a chunk-level keyword/text index that mirrors a subset of `nc.document_chunk`, `nc.source_document`, and `nc.embedding_ref` for BM25 search and filtering.
+
+- **Index pattern**
+
+  - Index name pattern: `nc-chunk-v1-*`
+  - Template: `schemas/opensearch/chunk-v1.json`
+  - ILM / ISM policy: `schemas/opensearch/policies/chunk-v1-ilm.json`
+
+- **Mappings (logical view)**
+
+  The `nc-chunk-v1-*` indices expose the following fields:
+
+  - `account_id`         (`keyword`) – tenant key; **all queries MUST filter by account_id**
+  - `chunk_id`           (`keyword`) – maps to `nc.document_chunk.id`
+  - `source_document_id` (`keyword`) – maps to `nc.document_chunk.source_document_id`
+  - `data_source_id`     (`keyword`) – maps to `nc.source_document.data_source_id`
+  - `ord`                (`integer`) – chunk ordinal within a source_document
+  - `text`               (`text`) – chunk text, BM25-searchable
+  - `tags`               (`keyword`) – optional normalized tags for faceting
+  - `created_at`         (`date`) – from `nc.document_chunk.created_at`
+  - `retention_class`    (`keyword`) – RC1..RC4, copied from `nc.source_document.retention_class`
+  - `model_key`          (`keyword`) – embedding model identifier (e.g. `openai/text-embedding-3-large`)
+
+  The JSON template at `schemas/opensearch/chunk-v1.json` is the canonical machine-readable definition.
+
+- **Retention and ILM**
+
+  - Policy file: `schemas/opensearch/policies/chunk-v1-ilm.json`
+  - States:
+    - `hot` → `warm` after 60 days.
+    - `warm` → `delete` after 90 days total index age.
+  - This is **RC3-aligned** and matches the database purge window for `nc.source_document` / `nc.document_chunk` (see §14 Retention enforcement jobs).
+
+- **Query and routing guidance**
+
+  - All search requests **must** include `account_id` as a filter.
+  - Where possible, scope by `model_key` to keep search behavior consistent with the embedding model used for Weaviate (`NcChunkV1`).
+  - For debugging and correlation:
+    - `chunk_id` joins back to `nc.document_chunk`.
+    - `source_document_id` joins to `nc.source_document`.
+    - `data_source_id` joins indirectly via `nc.source_document.data_source_id` to `nc.data_source`.
+
 
 ## **12. Backup and restore**
 

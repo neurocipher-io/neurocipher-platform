@@ -98,6 +98,31 @@ CREATE INDEX IF NOT EXISTS ix_chunk_doc ON nc.document_chunk(account_id, source_
 ALTER TABLE nc.document_chunk ENABLE ROW LEVEL SECURITY;
 CREATE POLICY p_document_chunk_tenant ON nc.document_chunk USING (account_id = nc.current_account_id());
 
+-- 6.10 embedding_ref
+CREATE TABLE IF NOT EXISTS nc.embedding_ref (
+  id                text PRIMARY KEY,
+  account_id        text NOT NULL REFERENCES nc.account(id),
+  document_chunk_id text NOT NULL REFERENCES nc.document_chunk(id),
+  weaviate_class    text NOT NULL,
+  weaviate_uuid     text NOT NULL,
+  model_key         text NOT NULL,
+  vector_dim        int  NOT NULL,
+  created_at        timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_embedding_chunk
+  ON nc.embedding_ref(document_chunk_id);
+
+CREATE INDEX IF NOT EXISTS ix_embedding_tenant
+  ON nc.embedding_ref(account_id, weaviate_class);
+
+CREATE INDEX IF NOT EXISTS ix_embedding_model
+  ON nc.embedding_ref(account_id, model_key);
+
+ALTER TABLE nc.embedding_ref ENABLE ROW LEVEL SECURITY;
+CREATE POLICY p_embedding_ref_tenant
+  ON nc.embedding_ref USING (account_id = nc.current_account_id());
+
 -- 6.11 ingestion_job
 CREATE TABLE IF NOT EXISTS nc.ingestion_job (
   id             text PRIMARY KEY,
