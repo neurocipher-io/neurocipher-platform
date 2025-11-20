@@ -169,7 +169,9 @@ PII and security
 
 - Redact emails, tokens, IPs by ADOT processors. Never log secrets.
 - Tenant isolation tag required on all metrics and logs.
+- Tenant identifier handling and header propagation follow docs/security-controls/SEC-005-Multitenancy-Policy.md.
 - S3 buckets encrypted with KMS. Access via IAM least privilege.
+- Masking and PII handling follow the classification tiers in `docs/governance/REF-001-Glossary-and-Standards-Catalog.md §8` alongside the DQ-001 masking rules.
 
   
 
@@ -206,6 +208,20 @@ Cost controls
   
 
   
+
+## **5. Retention & SLO matrix**
+
+| Surface | Target / SLO | SLI / Observability | Retention / RPO |
+|---|---|---|---|
+| **Ingest API** | 99.9 % availability per month; p95 latency ≤ 300 ms; 5xx < 0.5 % (OBS-003, REL-002) | `http_request_duration_seconds`, `ingest_success_total`, API Gateway `5xx` gauges, AMP/Prometheus dashboards | Logs hot 7 days (CloudWatch) → S3 365 days, metrics 30 days (AMP), traces 30 days (X-Ray), RPO 15 min / RTO 120 min (DR-001) |
+| **Query & Vector search (Weaviate NcChunkV1)** | p95 latency ≤ 200 ms; index error ≤ 0.1 %; error budget burn alerts as per OBS-003 | `weaviate_query_duration_seconds`, `weaviate_replica_health`, `vector_write_latency_ms`, OpenSearch `query_duration_seconds` | Vector data retention RC2 2 years (DM-001/DM-003), Weaviate nightly snapshots to S3, RPO 60 min / RTO 240 min (DR-001) |
+| **Pipeline freshness & indexing** | 99 % of documents searchable ≤ 5 min after ingest; queue lag < 2 min | `document_processing_latency_seconds`, `queue_age_seconds`, `embedding_ref` metrics | Normalized data retention RC3/RC2 (DM-001, LAK-001), RPO 60 min (DR-001) |
+| **Security actions & remediation** | Decision latency p95 ≤ 90 s; audit trails complete (OBS-003) | `security_engine.decision_latency_ms`, `security_engine.command_queue_age_s`, EventBridge audit events | Audit logs & command traces retained 2 years in S3 (OBS-003), RPO aligned with control plane recovery |
+| **Observability telemetry** | Metrics retention 30 days, traces 30 days, logs 90 days hot / 365 days archived; alert history 1 year (REL-002, OBS-003) | AMP/Prometheus, Grafana dashboards, Log archives | Metrics retention 30 days (AMP), traces 30 days, logs 90 days hot → 365 days warm (S3), alert history 1 year (AMP) |
+
+The table above is the canonical source for SLO targets and retention durations cited throughout OBS-003, REL-002, OPS-001, and DR-001. Alert routing, burn-rate policies, and incident readiness refer to these targets when they mention availability, latency, or retention-specific evidence.
+
+Capacity and cost assumptions that tune these targets (baseline QPS, queue margin, Weaviate throughput, and cost levers) live in `docs/CAP-001-Capacity-Model.md`; reference that document when tuning alarms or adjusting SLO thresholds.
 
 OBS-002 Monitoring, Dashboards, and Tracing
 
@@ -641,6 +657,7 @@ Security and PII
 
 - Redact tokens/IPs via ADOT processors.
 - Tenant tag mandatory.
+- See docs/security-controls/SEC-005-Multitenancy-Policy.md for the canonical tenant-id format and propagation rules.
 - S3 encrypted (KMS). IAM least privilege.
 
   

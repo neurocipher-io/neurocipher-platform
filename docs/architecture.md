@@ -28,7 +28,77 @@ Foundation for AWS native ingestion, normalization, embeddings, and hybrid retri
 
   
 
-## 2. High level diagram
+## 2. Context diagram
+
+Context-level boundaries are captured in `docs/architecture/context-diagram.mmd`; the following Mermaid diagram illustrates the platform’s interaction with clients, ingestion, and the vector/search plane.
+
+```mermaid
+flowchart LR
+    subgraph External
+        Client[Clients & Partners]
+        Events[Partner Event Webhooks]
+    end
+
+    subgraph Platform
+        API[API Gateway & FastAPI]
+        Normalize[Normalize Lambda]
+        Embed[Embed Workers (Fargate)]
+        Security[Security Engine]
+        Vector[Weaviate `NcChunkV1`]
+        Search[OpenSearch]
+        Lake[Postgres + S3 + Iceberg]
+    end
+
+    Client --> API
+    Events --> Normalize
+    API --> Normalize
+    Normalize --> Lake
+    Normalize --> Embed
+    Embed --> Vector
+    Embed --> Search
+    API --> Security
+    API --> Vector
+    API --> Search
+    API --> Lake
+````
+
+## 3. Container diagram
+
+Container-level responsibilities for ingest, normalization, embedding, API, and security modules are detailed in `docs/architecture/container-diagram.mmd`. The Mermaid diagram below mirrors that file.
+
+```mermaid
+flowchart TB
+    subgraph Ingest Tier
+        IngestAPI[Ingest API Gateway]
+        Normalize[Normalize Lambda]
+    end
+
+    subgraph Data Plane
+        Lake[Postgres / Iceberg / S3]
+        Vector[Weaviate NcChunkV1]
+        OpenSearch[OpenSearch Serverless]
+    end
+
+    subgraph Control Plane
+        API[FastAPI Query Service]
+        Security[Security Engine Module]
+        Batch[Reindex & Batch Jobs]
+    end
+
+    IngestAPI --> Normalize
+    Normalize --> Lake
+    Normalize --> Vector
+    Normalize --> OpenSearch
+    Batch --> Lake
+    Batch --> Vector
+    Batch --> OpenSearch
+    API --> Vector
+    API --> OpenSearch
+    API --> Lake
+    API --> Security
+````
+
+## 4. High level diagram
 
 ```mermaid
 
@@ -64,7 +134,7 @@ flowchart LR
 
   N --> S3N[(S3 normalized)]
 
-  N --> DDB[(DynamoDB metadata)]
+  N --> PGMeta[(Postgres metadata)]
 
   N --> E[SQS embed]
 
@@ -78,7 +148,7 @@ flowchart LR
 
   WU --> OS[(OpenSearch index)]
 
-  WU --> DDB
+  WU --> PGMeta
 
   
 
@@ -91,7 +161,7 @@ flowchart LR
 
     API --> OS
 
-    API --> DDB
+    API --> PGMeta
 
   end
 
@@ -137,7 +207,7 @@ flowchart TB
 
       S3N[(S3 norm)]
 
-      DDB[(DynamoDB)]
+  PGMeta[(Postgres metadata)]
 
       WV[(Weaviate)]
 
@@ -183,7 +253,7 @@ sequenceDiagram
 
   participant S3 as S3 raw and norm
 
-  participant DDB as DynamoDB meta
+  participant PGMeta as Postgres metadata
 
   participant EMB as Embed Worker
 
@@ -203,7 +273,7 @@ sequenceDiagram
 
   Norm->>S3: Write raw and normalized
 
-  Norm->>DDB: Upsert metadata
+  Norm->>PGMeta: Upsert metadata
 
   Norm->>SQS: Enqueue embed task
 
@@ -444,9 +514,9 @@ batch
   
 
 - dp-ingest-exec: SQS SendMessage, logs
-- dp-normalize-exec: S3 PutObject, DDB PutItem, SQS SendMessage, KMS Decrypt
-- dp-embed-exec: Weaviate write, OpenSearch write, DDB UpdateItem, S3 GetObject
-- dp-api-exec: Weaviate query, OpenSearch query, DDB Query, limited S3 GetObject
+- dp-normalize-exec: S3 PutObject, Postgres metadata insert/upsert, SQS SendMessage, KMS Decrypt
+- dp-embed-exec: Weaviate write, OpenSearch write, Postgres metadata update, S3 GetObject
+- dp-api-exec: Weaviate query, OpenSearch query, Postgres metadata query, limited S3 GetObject
 
   
 

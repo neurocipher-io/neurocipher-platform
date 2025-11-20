@@ -43,6 +43,21 @@ Out of scope: BI semantic models, UI view models.
 
 Assumptions: ULIDs as text, UTC timestamps, RLS for tenancy, PgBouncer in front of Postgres.
 
+Tenant context validation and quota guardrails align with docs/security-controls/SEC-005-Multitenancy-Policy.md.
+
+## **2.1 Metadata store**
+
+- Per ADR-001 and DM-001, the canonical metadata catalog (asset, source_document, ingestion_job, scan, finding, evidence, etc.) lives in PostgreSQL (`nc.*` schema) with RLS enforcing tenant identity.
+- This Postgres metadata store is the single view for control-plane signals, lineage, and operational reporting; DynamoDB hosts auxiliary workloads (idempotency guard, temporary caches) but is not the canonical metadata engine.
+
+
+## **2.2 Vector store contract**
+
+- **Weaviate class naming**: The canonical vector class is `NcChunkV1`. Each incompatible schema bump increments the suffix (`NcChunkV2`, etc.), and all references (DM-005 §8.10, PROC-003 §68, DCON-001 §202) must cite the newest `NcChunkV{n}` value. The class stores embedding vectors and metadata mirrored from `nc.document_chunk` rows (see §6.8).
+- **Index naming**: Production, staging, and dev deployments publish a consistent alias (`nc_chunk_v1_index`) per environment (for example `weaviate-prod-nc-chunk-v1-index`). Authors and instrumentation refer to this alias when describing query routing, shards, and metrics so dashboards stay in sync.
+- **Metadata linkage**: `nc.embedding_ref` rows reference the active Weaviate class via `weaviate_class` and keep `class_version`, ensuring the `document_chunk` → `NcChunkV1` mapping remains traceable across upgrades.
+- **Observability & metrics**: Dashboards, SLOs, and alerts track `weaviate_query_duration_seconds`, `weaviate_upsert_latency_seconds`, and `weaviate_replica_health` (see `OBS-002` and `REL-002`). Vector store quotas depend on this class and the API Gateway `X-RateLimit-*` headers.
+
   
 
 ## **3. Non-functional requirements**

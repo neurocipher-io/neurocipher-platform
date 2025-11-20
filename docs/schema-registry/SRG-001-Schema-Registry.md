@@ -38,6 +38,7 @@ Define a single authoritative registry for all schemas used across ingestion, pr
 - SEC-002 IAM Policy and Trust Relationship Map
 - SEC-003 Network Policy and Segmentation
 - SEC-004 Secrets and KMS Rotation Playbook
+- SEC-005 Multitenancy policy
 - TEST-001 Testing and Quality Gates
 - TEST-002 Continuous Integration and Test Automation
 - TEST-003 Quality Assurance and Release Validation

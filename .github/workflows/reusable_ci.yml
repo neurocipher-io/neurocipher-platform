@@ -1,0 +1,49 @@
+name: Reusable CI
+
+on:
+  workflow_call:
+    inputs:
+      coverage_min_lines:
+        type: string
+        default: "0.85"
+      coverage_min_branches:
+        type: string
+        default: "0.80"
+      trivy_fail_on:
+        type: string
+        default: "HIGH,CRITICAL"
+      path_filters:
+        type: string
+        required: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: ${{ inputs.path_filters }}
+
+  lint_types_tests:
+    if: ${{ needs.detect.outputs.changed != '[]' }}
+    needs: detect
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Upgrade tooling
+        run: python -m pip install --upgrade pip
+      - name: Install CLI dependencies
+        run: pip install black isort ruff pytest
+      - name: Format
+        run: make fmt
+      - name: Lint
+        run: make lint
+      - name: Test
+        run: make test

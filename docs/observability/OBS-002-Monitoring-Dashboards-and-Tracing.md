@@ -32,6 +32,8 @@ Tags: monitoring / dashboards / tracing / observability / reliability
 
 Establish a single standard for metrics, dashboards, and distributed tracing across the Neurocipher Pipeline and external orchestrator (see docs/integrations/README.md) systems. The goal is full situational awareness, fast anomaly detection, and consistent telemetry across all services.
 
+This observability pattern is parameterized by the capacity/cost assumptions in `docs/CAP-001-Capacity-Model.md`; the KPIs below inherit the same QPS, queue, and Weaviate throughput targets referenced by OBS-001.
+
   
 
   
@@ -81,45 +83,11 @@ Applies to:
 
 Additional KPIs
 
-  
-
-- ingest_events_total  – pipeline throughput
-- vector_write_latency_ms  – index performance
-- retrieval_latency_p95_ms  – search speed
-- log_volume_bytes_total  – cost driver
-- metric_series_count  – cardinality control
-
-  
-
-  
-
-  
-
-  
-
-  
-
-4 Monitoring Architecture
-
-  
-
-|   |   |   |
-|---|---|---|
-|Layer|Service|Purpose|
-|Collection|AWS Distro for OpenTelemetry (ADOT)|Unified export of metrics, logs and traces|
-|Metrics|Prometheus → Amazon Managed Prometheus (AMP)|Long-term retention and alerting|
-|Logs|CloudWatch → Firehose → S3 (Parquet) → OpenSearch Serverless|Structured search and forensics|
-|Traces|OpenTelemetry → AWS X-Ray (+ Grafana Tempo)|End-to-end trace correlation|
-|Dashboards|Amazon Managed Grafana|Visualization and context|
-|Alerting|CloudWatch Alarms + AMP Alertmanager + SNS|Real-time notifications|
-
-  
-
-  
-
-  
-
-  
+- ingest_events_total – pipeline throughput
+- vector_write_latency_ms – Weaviate `NcChunkV1` index performance
+- retrieval_latency_p95_ms – search speed
+- log_volume_bytes_total – cost driver
+- metric_series_count – cardinality control
 
 5 Dashboard Standards
 
@@ -161,6 +129,7 @@ Dashboards are stored as JSON and provisioned via Terraform.
 - Instrument all APIs and async jobs with OpenTelemetry.
 - Use traceparent and tracestate headers for HTTP propagation.
 - Include correlation_id and tenant_id in async events.
+- Tenant identifier handling for metrics and traces follows docs/security-controls/SEC-005-Multitenancy-Policy.md.
 - One span per external call using the pattern <verb>.<resource> (e.g. get.vectors, post.ingest).
 
   
@@ -365,5 +334,3 @@ Progress is tracked in the Reliability Review Report (REL-002).
 - CloudWatch and Prometheus alert rules equivalent to the examples in this document are in place, with routing to owners defined in `ops/owners.yaml`.
 - Each page-worthy alert links to the appropriate runbook (`RB-ING-001`, `RB-API-002`, `RB-VEC-003`, `RB-OPS-004`) and those runbooks remain current.
 - Distributed tracing is instrumented for APIs and async workloads per this spec and is visible in Grafana/X-Ray with the sampling policy applied.
-
-

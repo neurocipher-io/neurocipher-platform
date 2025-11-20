@@ -44,6 +44,8 @@ In scope: domain events from CRUD and state transitions across all DM-001 entiti
 
 Out of scope: analytics streams, BI change-data-capture.
 
+Tenant identifier propagation, event metadata, and isolation controls follow docs/security-controls/SEC-005-Multitenancy-Policy.md.
+
   
 
 ## **3. Non-functional requirements**

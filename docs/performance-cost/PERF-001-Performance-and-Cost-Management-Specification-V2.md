@@ -20,7 +20,7 @@ Applies to: Neurocipher Core pipeline (see docs/integrations/)
 
 Last Reviewed: 2025-11-06
 
-References: ADR-005, ADR-009, OPS-001, OBS-001-003, REL-002, CI/CL-001-003
+References: ADR-005, ADR-009, OPS-001, OBS-001-003, REL-002, CI/CL-001-003, CAP-001
 
   
 
@@ -248,4 +248,3 @@ Monthly cost reports attached to REL-002 Reliability Report; trend deviation > 1
   
 
 End of PERF-001 — Performance and Cost Management Specification
-

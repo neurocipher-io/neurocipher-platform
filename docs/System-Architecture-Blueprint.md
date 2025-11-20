@@ -45,7 +45,7 @@ flowchart LR
 
   N --> S3N[(S3 normalized)]
 
-  N --> DDB[(DynamoDB metadata)]
+  N --> PGMeta[(Postgres metadata)]
 
   N --> E[SQS embed]
 
@@ -57,7 +57,7 @@ flowchart LR
 
   WU --> OS[(OpenSearch index)]
 
-  WU --> DDB
+  WU --> PGMeta
 
   
 
@@ -69,7 +69,7 @@ flowchart LR
 
     API --> OS
 
-    API --> DDB
+    API --> PGMeta
 
   end
 
@@ -109,7 +109,7 @@ flowchart TB
 
       S3N[(S3 norm)]
 
-      DDB[(DynamoDB)]
+      PGMeta[(Postgres metadata)]
 
       WV[(Weaviate)]
 
@@ -152,7 +152,7 @@ sequenceDiagram
 
   participant S3 as S3 raw/norm
 
-  participant DDB as DynamoDB meta
+  participant PGMeta as Postgres metadata
 
   participant EMB as Embed Worker
 
@@ -170,7 +170,7 @@ sequenceDiagram
 
   Norm->>S3: Write raw + normalized
 
-  Norm->>DDB: Upsert metadata
+  Norm->>PGMeta: Upsert metadata
 
   Norm->>SQS: Enqueue embed task
 
@@ -366,9 +366,9 @@ sequenceDiagram
   
 
 - Role dp-ingest-exec: SQS SendMessage, CloudWatch logs.
-- Role dp-normalize-exec: S3 PutObject, DDB PutItem, SQS SendMessage, KMS Decrypt.
-- Role dp-embed-exec: Weaviate API, OpenSearch write, DDB UpdateItem, S3 GetObject.
-- Role dp-api-exec: Weaviate query, OpenSearch query, DDB Query, limited S3 GetObject.
+- Role dp-normalize-exec: S3 PutObject, Postgres metadata insert/upsert, SQS SendMessage, KMS Decrypt.
+- Role dp-embed-exec: Weaviate API, OpenSearch write, Postgres metadata update, S3 GetObject.
+- Role dp-api-exec: Weaviate query, OpenSearch query, Postgres metadata query, limited S3 GetObject.
 
   
 

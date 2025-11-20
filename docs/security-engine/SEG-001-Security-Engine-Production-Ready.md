@@ -50,6 +50,7 @@ Core runtime, ports and adapters, canonical data contracts, evaluation policy mo
 - CI-001..CI-003 CI and Delivery
 - OBS-001..OBS-003 Observability
 - SEC-002 IAM Policy Maps, SEC-003 Network Policy, SEC-004 KMS Rotation
+- SEC-005 Multitenancy policy
 - ADR-0xx Ports and Adapters Decision
 - OPA Rego v1 policy model
 - OpenTelemetry v1.27.0 specs

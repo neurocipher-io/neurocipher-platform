@@ -98,6 +98,7 @@ EventBridge ingest-clean-topic
 - Remove or hash personally identifiable fields prior to external persistence.  
 - Enforced policy per OBS-001 redaction catalog.  
 - Vector embeddings exclude any classified fields.
+- The PII classification table in `docs/governance/REF-001-Glossary-and-Standards-Catalog.md §8` and DQ-001 masking rules determine what constitutes P1/P2 content; Macie/regex scans drive the detection hooks that trigger hashing or rejection.
 
 ### 4.4 Schema Validation
 

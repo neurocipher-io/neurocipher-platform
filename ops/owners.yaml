@@ -1,24 +1,186 @@
-ingest_api:
-  owner: platform-ingest
-  slack: "#ingest-alerts"
-  escalation: "pagerduty:ingest-api"
+teams:
+  Architecture Review Board (ARB):
+    slack: "#arb-alerts"
+    escalation: "pagerduty:arb"
+  Data Architecture:
+    slack: "#data-architecture"
+    escalation: "pagerduty:data-architecture"
+  Data Architecture Lead:
+    slack: "#data-architecture-lead"
+    escalation: "pagerduty:data-architecture-lead"
+  Data Engineering:
+    slack: "#data-engineering"
+    escalation: "pagerduty:data-engineering"
+  Data Governance:
+    slack: "#data-governance"
+    escalation: "pagerduty:data-governance"
+  Data Platform:
+    slack: "#data-platform"
+    escalation: "pagerduty:data-platform"
+  data platform:
+    slack: "#data-platform"
+    escalation: "pagerduty:data-platform"
+  Data Platform Engineering:
+    slack: "#data-platform-engineering"
+    escalation: "pagerduty:data-platform-engineering"
+  Data Platform Lead:
+    slack: "#data-platform-lead"
+    escalation: "pagerduty:data-platform-lead"
+  DevEx:
+    slack: "#devex"
+    escalation: "pagerduty:devex"
+  FinOps:
+    slack: "#finops"
+    escalation: "pagerduty:finops"
+  FinOps Lead:
+    slack: "#finops-lead"
+    escalation: "pagerduty:finops-lead"
+  Finance Operations:
+    slack: "#finance-operations"
+    escalation: "pagerduty:finance-operations"
+  Governance Engineering:
+    slack: "#governance-engineering"
+    escalation: "pagerduty:governance-engineering"
+  Infrastructure Architecture:
+    slack: "#infrastructure-architecture"
+    escalation: "pagerduty:infra-architecture"
+  Performance Engineering:
+    slack: "#performance-engineering"
+    escalation: "pagerduty:performance-engineering"
+  Pipeline Engineering:
+    slack: "#pipeline-engineering"
+    escalation: "pagerduty:pipeline-engineering"
+  Platform:
+    slack: "#platform-alerts"
+    escalation: "pagerduty:platform"
+  Platform Engineering:
+    slack: "#platform-engineering"
+    escalation: "pagerduty:platform-engineering"
+  Platform Engineering Lead:
+    slack: "#platform-engineering-lead"
+    escalation: "pagerduty:platform-engineering-lead"
+  Platform Reliability:
+    slack: "#platform-reliability"
+    escalation: "pagerduty:platform-reliability"
+  Platform SRE:
+    slack: "#platform-sre"
+    escalation: "pagerduty:platform-sre"
+  Product Owner:
+    slack: "#product-owner"
+    escalation: "pagerduty:product-owner"
+  QA Lead:
+    slack: "#qa"
+    escalation: "pagerduty:qa"
+  QA Performance Engineering:
+    slack: "#qa-performance"
+    escalation: "pagerduty:qa-performance"
+  Release Engineering:
+    slack: "#release-engineering"
+    escalation: "pagerduty:release-engineering"
+  Reliability Engineering:
+    slack: "#reliability"
+    escalation: "pagerduty:reliability"
+  SRE:
+    slack: "#sre"
+    escalation: "pagerduty:sre"
+  SRE Lead:
+    slack: "#sre-lead"
+    escalation: "pagerduty:sre-lead"
+  Search Lead:
+    slack: "#search-lead"
+    escalation: "pagerduty:search-lead"
+  Security Engineering:
+    slack: "#security-engineering"
+    escalation: "pagerduty:security-engineering"
+  Security Lead:
+    slack: "#security-lead"
+    escalation: "pagerduty:security-lead"
+  Site Reliability Engineering:
+    slack: "#sre"
+    escalation: "pagerduty:sre"
+  Vector Team:
+    slack: "#vector-team"
+    escalation: "pagerduty:vector"
+  alice@example.com:
+    slack: "#alice"
+    escalation: "pagerduty:alice"
+  platform-serving:
+    slack: "#platform-serving"
+    escalation: "pagerduty:platform-serving"
 
-normalize_service:
-  owner: platform-data
-  slack: "#normalize-alerts"
-  escalation: "pagerduty:normalize"
+  Architecture Review Board (ARB) / Platform SRE / FinOps:
+    slack: "#arb-platform-reliability-finops"
+    escalation: "pagerduty:arb-platform-reliability-finops"
+  Data Platform Engineering / Data Architecture Lead:
+    slack: "#data-platform-eng-arch"
+    escalation: "pagerduty:data-platform-eng-arch"
+  Data Platform Engineering / Data Engineering:
+    slack: "#data-platform-eng-data"
+    escalation: "pagerduty:data-platform-eng-data"
+  Data Platform Engineering / Platform SRE / Vector Team:
+    slack: "#data-platform-eng-sre-vector"
+    escalation: "pagerduty:data-platform-eng-sre-vector"
+  Data Platform Engineering / SRE:
+    slack: "#data-platform-eng-sre"
+    escalation: "pagerduty:data-platform-eng-sre"
+  Data Platform Lead / Governance Engineering:
+    slack: "#data-platform-governance"
+    escalation: "pagerduty:data-platform-governance"
+  Data Platform Lead / Pipeline Engineering:
+    slack: "#data-platform-pipeline"
+    escalation: "pagerduty:data-platform-pipeline"
+  FinOps / Platform SRE / Finance Operations:
+    slack: "#finops-platform-sre-finance"
+    escalation: "pagerduty:finops-platform-sre-finance"
+  Platform SRE / FinOps:
+    slack: "#platform-sre-finops"
+    escalation: "pagerduty:platform-sre-finops"
+  Platform SRE / FinOps / Infrastructure Architecture:
+    slack: "#platform-sre-finops-infra"
+    escalation: "pagerduty:platform-sre-finops-infra"
+  Platform SRE / FinOps / Performance Engineering:
+    slack: "#platform-sre-finops-performance"
+    escalation: "pagerduty:platform-sre-finops-performance"
+  Platform SRE / QA Performance Engineering:
+    slack: "#platform-sre-qa-performance"
+    escalation: "pagerduty:platform-sre-qa-performance"
+  Platform SRE / Security Engineering:
+    slack: "#platform-sre-security"
+    escalation: "pagerduty:platform-sre-security"
+  QA Performance Engineering / Platform SRE:
+    slack: "#qa-performance-platform-sre"
+    escalation: "pagerduty:qa-performance-platform-sre"
+  Release Engineering, QA Lead, Security Lead:
+    slack: "#release-qa-security"
+    escalation: "pagerduty:release-qa-security"
+  Release Engineering, SRE Lead, Security Lead:
+    slack: "#release-sre-security"
+    escalation: "pagerduty:release-sre-security"
+  Release Engineering, SRE Lead, Security Lead, Product Owner:
+    slack: "#release-sre-security-product"
+    escalation: "pagerduty:release-sre-security-product"
+  platform-serving / data platform:
+    slack: "#platform-serving-data-platform"
+    escalation: "pagerduty:platform-serving-data-platform"
 
-embed_service:
-  owner: ml-platform
-  slack: "#embed-alerts"
-  escalation: "pagerduty:embed"
-
-query_api:
-  owner: platform-serving
-  slack: "#query-alerts"
-  escalation: "pagerduty:query"
-
-security_engine_interface:
-  owner: security-engineering
-  slack: "#security-engine"
-  escalation: "pagerduty:security-engine"
+services:
+  ingest_api:
+    owner: Platform
+    slack: "#ingest-alerts"
+    escalation: "pagerduty:ingest-api"
+  normalize_service:
+    owner: Platform
+    slack: "#normalize-alerts"
+    escalation: "pagerduty:normalize"
+  embed_service:
+    owner: Platform
+    slack: "#embed-alerts"
+    escalation: "pagerduty:embed"
+  query_api:
+    owner: platform-serving
+    slack: "#query-alerts"
+    escalation: "pagerduty:query"
+  security_engine_interface:
+    owner: Security Engineering
+    slack: "#security-engine"
+    escalation: "pagerduty:security-engine"

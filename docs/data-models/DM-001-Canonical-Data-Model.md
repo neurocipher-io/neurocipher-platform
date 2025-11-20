@@ -55,8 +55,9 @@ Out of scope: UI view models, per-cloud raw provider payloads, pricing and billi
 - ADR-007 Data Lifecycle and Retention
     
 - SEC-001..004 Security series
+- SEC-005 Multitenancy policy
     
-
+  
   
 
 ## **4. Conventions**

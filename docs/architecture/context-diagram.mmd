@@ -1,0 +1,27 @@
+flowchart LR
+    subgraph External
+        Client[Clients & Partners]
+        Events[Partner Event Webhooks]
+    end
+
+    subgraph Platform
+        API[API Gateway & FastAPI]
+        Normalize[Normalize Lambda]
+        Embed[Embed Workers (Fargate)]
+        Security[Security Engine]
+        Vector[Weaviate `NcChunkV1`]
+        Search[OpenSearch]
+        Lake[Postgres + S3 + Iceberg]
+    end
+
+    Client --> API
+    Events --> Normalize
+    API --> Normalize
+    Normalize --> Lake
+    Normalize --> Embed
+    Embed --> Vector
+    Embed --> Search
+    API --> Security
+    API --> Vector
+    API --> Search
+    API --> Lake

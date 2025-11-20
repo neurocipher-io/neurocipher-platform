@@ -55,9 +55,11 @@ Out of scope: BI semantic layers and product analytics eventing.
 - ADR-007 Data Lifecycle & Retention
     
 - ADR-010 Disaster Recovery & Backups
-    
+   
 - SEC-001..004 Security suite
-    
+   
+- SEC-005 Multitenancy policy
+
 - REL-001 High Availability & Fault Tolerance
     
 

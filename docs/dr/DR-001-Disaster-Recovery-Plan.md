@@ -38,6 +38,8 @@ Activation requires approval from Platform Director plus Security Engineering le
 | Vector indexes    | 60 minutes       | 240 minutes      | Rebuilt from lakehouse + snapshot exports. |
 | Query API         | 15 minutes       | 60 minutes       | Public API entry points and gateways.      |
 
+These RPO/RTO targets mirror the availability and retention entries for ingest, pipeline, and vector search in the Retention & SLO matrix (OBS-001 §5); that matrix is the authoritative reference for target latency, availability, and retention durations elsewhere in the platform documentation.
+
 ## 4. Recovery Procedure (Regional Outage)
 1. Declare incident, assign Incident Commander, and start log in `ops/incident/<id>.md`.  
 2. Freeze deployments; capture last healthy build IDs.  

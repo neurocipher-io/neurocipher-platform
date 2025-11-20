@@ -47,8 +47,8 @@ Performance modelling uses empirical telemetry from **OBS-002/003** and syntheti
 |---------|---------------|--------------------|-------|
 | **Batch Throughput** | ≥ 100 MB/s | CloudWatch + Prometheus | PROC-001 |
 | **Stream Latency** | ≤ 5 min | API Gateway / ECS metrics | PROC-002 |
-| **Embedding Upsert** | ≤ 1 s / chunk | Weaviate metrics | PROC-003 |
-| **Query Latency** | ≤ 200 ms | OpenSearch / Weaviate | Serving |
+| **Embedding Upsert** | ≤ 1 s / chunk | Weaviate `NcChunkV1` metrics | PROC-003 |
+| **Query Latency** | ≤ 200 ms | OpenSearch / Weaviate `NcChunkV1` | Serving |
 | **Pipeline Success Rate** | ≥ 99 % / month | ADOT collector | Platform-wide |
 | **Autoscaling Convergence** | ≤ 90 s | CloudWatch + Application Autoscaling | ECS & Lambda |
 

@@ -363,15 +363,7 @@ Error tracking
 
 SLOs
 
-- Availability 99.9 percent per public API monthly
-    
-- Latency p95 GET under 500 ms, writes under 800 ms at gateway
-    
-- Error rate 5xx under 0.5 percent
-    
-- Async job freshness 95 percent under 2 minutes
-    
-- Webhook delivery success 99 percent under 5 minutes
+- The canonical Retention & SLO matrix in OBS-001 §5 defines these targets and the associated SLIs (ingest availability 99.9%, ingest latency p95 ≤ 300 ms, vector latency p95 ≤ 200 ms, pipeline freshness ≥ 99 % within 5 minutes, security action latency p95 ≤ 90 s); the capacity/cost envelope that supplies these numbers lives in `docs/CAP-001-Capacity-Model.md`. Use those values as the source of truth when gating merges or evaluating alert thresholds.
     
 
 Alert rules

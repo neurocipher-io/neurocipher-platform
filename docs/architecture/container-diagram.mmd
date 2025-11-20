@@ -1,0 +1,29 @@
+flowchart TB
+    subgraph Ingest Tier
+        IngestAPI[Ingest API Gateway]
+        Normalize[Normalize Lambda]
+    end
+
+    subgraph Data Plane
+        Lake[Postgres / Iceberg / S3]
+        Vector[Weaviate NcChunkV1]
+        OpenSearch[OpenSearch Serverless]
+    end
+
+    subgraph Control Plane
+        API[FastAPI Query Service]
+        Security[Security Engine Module]
+        Batch[Reindex & Batch Jobs]
+    end
+
+    IngestAPI --> Normalize
+    Normalize --> Lake
+    Normalize --> Vector
+    Normalize --> OpenSearch
+    Batch --> Lake
+    Batch --> Vector
+    Batch --> OpenSearch
+    API --> Vector
+    API --> OpenSearch
+    API --> Lake
+    API --> Security

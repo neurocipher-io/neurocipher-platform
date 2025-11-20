@@ -56,6 +56,8 @@ ADR-007 Data Lifecycle & Retention
 
 SEC-001..004
 
+SEC-005 Multitenancy policy
+
   
 
 ## **4. Conventions**

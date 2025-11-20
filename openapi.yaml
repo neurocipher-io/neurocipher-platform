@@ -4,7 +4,9 @@ info:
   version: "1.0.0"
   description: >
     REST interface for ingest, query, admin, and security-action operations.
-    All business endpoints (excluding `/health`) require `Tenant-Id`, `Correlation-Id`, and authenticated callers (AWS SigV4 or JWT).
+    All business endpoints (excluding `/health`) require `Tenant-Id`, `Correlation-Id`, and authenticated callers.
+    JWT (OIDC) is the primary entry point while SigV4 is only a limited service-to-service fallback.
+    Error responses follow docs/api-ops/API-Error-Catalog.md.
 servers:
   - url: https://api.neurocipher.io/v1
     description: Production
@@ -55,7 +57,30 @@ components:
       required: true
       schema:
         type: string
-      description: Required for all mutating requests; ULID or UUID v4
+      description: >
+        Required for all mutating requests; ULID or UUID v4.
+        The key is scoped to the tenant, API route, and payload fingerprint.
+        It is stored for 24 hours and tied to the conflict semantics in docs/api-ops/API-001-Edge-and-Gateway-Architecture.md
+        and docs/api-ops/API-Error-Catalog.md.
+    PageSize:
+      name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+      description: >
+        Number of items to return in paged list responses; defaults to 50 and cannot exceed 200.
+        Pass the value back with each page to keep the page size stable.
+    NextCursor:
+      name: next_cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Opaque cursor from the prior page response; omit or null to fetch the first page.
   schemas:
     ErrorResponse:
       type: object
@@ -74,6 +99,23 @@ components:
           required:
             - code
             - message
+    PaginationMetadata:
+      type: object
+      properties:
+        page_size:
+          type: integer
+          description: Page size requested via the `page_size` query parameter.
+          minimum: 1
+          maximum: 200
+        next_cursor:
+          type: string
+          nullable: true
+          description: Opaque cursor for the next page.
+        has_more:
+          type: boolean
+          description: True when more pages exist after this cursor.
+      required:
+        - page_size
     IngestRequest:
       type: object
       required:
@@ -122,13 +164,15 @@ components:
                 type: string
               snippet:
                 type: string
-              metadata:
-                type: object
-                additionalProperties: true
+            metadata:
+              type: object
+              additionalProperties: true
+        pagination:
+          $ref: '#/components/schemas/PaginationMetadata'
         next_cursor:
           type: string
           nullable: true
-          description: Opaque cursor token for fetching the next page of results; null or omitted when there is no next page.
+          description: Legacy shortcut for `pagination.next_cursor`; prefer the pagination block.
     ReindexRequest:
       type: object
       properties:
@@ -224,6 +268,10 @@ components:
             metadata:
               source: "policy-repo"
               tenant_id: "tn_01HZY3"
+        pagination:
+          page_size: 50
+          next_cursor: "opaque-cursor-token-01"
+          has_more: true
         next_cursor: "opaque-cursor-token-01"
     ErrorRateLimitedExample:
       summary: Rate limit exceeded error
@@ -234,6 +282,68 @@ components:
           correlation_id: "01J9Z4Q7A6M8T1N9ZK7N1A2B3C"
           details:
             retry_after_seconds: 60
+  responses:
+    InvalidRequest:
+      description: Schema or semantic validation failure; see docs/api-ops/API-Error-Catalog.md for code semantics.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Missing or invalid credentials; API-Error-Catalog code `UNAUTHENTICATED`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Scope, policy, or tenant access denied; API-Error-Catalog code `UNAUTHORIZED`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource under the tenant was not found; API-Error-Catalog code `RESOURCE_NOT_FOUND`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Idempotency conflict or duplicate resource; API-Error-Catalog code `CONFLICT`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimited:
+      description: Rate or quota exceeded; API-Error-Catalog code `RATE_LIMITED`.
+      headers:
+        Retry-After:
+          description: Seconds until the next retry window opens.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorRateLimitedExample'
+    ServerError:
+      description: Unhandled service error; API-Error-Catalog code `INTERNAL`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unavailable:
+      description: Brownout or dependency outage; API-Error-Catalog code `UNAVAILABLE`.
+      headers:
+        Retry-After:
+          description: Seconds until the service is expected to recover.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
 paths:
   /ingest/event:
     post:
@@ -242,11 +352,13 @@ paths:
       tags: [ingest]
       operationId: ingestEvent
       security:
-        - SigV4Auth: []
         - BearerAuth: []
+        - SigV4Auth: []
       parameters:
         - $ref: '#/components/parameters/TenantId'
         - $ref: '#/components/parameters/CorrelationId'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/NextCursor'
         - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
@@ -265,32 +377,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/IngestResponse'
         "400":
-          description: Invalid payload
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/InvalidRequest'
         "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthenticated'
+        "409":
+          $ref: '#/components/responses/Conflict'
         "429":
-          description: Rate limited
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/ErrorRateLimitedExample'
+          $ref: '#/components/responses/RateLimited'
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ServerError'
   /query:
     get:
       summary: Search normalized documents
@@ -298,8 +393,8 @@ paths:
       tags: [query]
       operationId: queryDocuments
       security:
-        - SigV4Auth: []
         - BearerAuth: []
+        - SigV4Auth: []
       parameters:
         - $ref: '#/components/parameters/TenantId'
         - $ref: '#/components/parameters/CorrelationId'
@@ -335,35 +430,15 @@ paths:
                 default:
                   $ref: '#/components/examples/QueryExample'
         "400":
-          description: Invalid query
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/InvalidRequest'
         "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthenticated'
         "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthorized'
         "429":
-          description: Rate limited
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/RateLimited'
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ServerError'
   /admin/reindex:
     post:
       summary: Reindex normalized documents
@@ -386,23 +461,13 @@ paths:
         "202":
           description: Reindex job accepted
         "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthorized'
+        "409":
+          $ref: '#/components/responses/Conflict'
         "429":
-          description: Rate limited
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/RateLimited'
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ServerError'
   /security/actions:
     post:
       summary: Submit security action command
@@ -429,23 +494,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecurityActionResponse'
         "400":
-          description: Invalid command payload
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/InvalidRequest'
         "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthenticated'
         "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthorized'
         "409":
           description: Duplicate action_id detected
           content:
@@ -453,17 +506,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecurityActionResponse'
         "429":
-          description: Rate limited
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/RateLimited'
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ServerError'
   /security/actions/{id}:
     get:
       summary: Fetch security action status
@@ -488,23 +533,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecurityActionStatus'
         "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthenticated'
         "403":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Unauthorized'
         "404":
-          description: Action not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
   /health:
     get:
       summary: Health and dependency check
@@ -521,8 +554,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
         "500":
-          description: Unhealthy
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/ServerError'
+        "503":
+          $ref: '#/components/responses/Unavailable'

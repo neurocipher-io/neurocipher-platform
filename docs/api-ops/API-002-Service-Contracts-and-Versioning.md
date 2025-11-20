@@ -119,26 +119,7 @@ Envelope
 }
 ```
 
-HTTP to code mapping
-
-- 400 INVALID_REQUEST
-    
-- 401 UNAUTHENTICATED
-    
-- 403 UNAUTHORIZED
-    
-- 404 RESOURCE_NOT_FOUND
-    
-- 409 CONFLICT
-    
-- 422 UNPROCESSABLE_ENTITY
-    
-- 429 RATE_LIMITED
-    
-- 500 INTERNAL
-    
-- 503 UNAVAILABLE
-    
+HTTP to code mapping is canonicalized in docs/api-ops/API-Error-Catalog.md; do not create duplicate tables.
 
 Do not leak stack traces. Fingerprints live in logs.
 
@@ -148,36 +129,19 @@ Do not leak stack traces. Fingerprints live in logs.
 
 Pagination
 
-- Cursor based only.
-    
-- `?limit=50&after=<opaque_cursor>`. Default 50. Max 200.
-    
-- Cursor encodes stable sort key and tenant scope. Opaque to clients.
-    
-
-Sorting
-
-- `sort=field` or `sort=-field`. Default sorts by created_at desc then id.
-    
-- If field not indexed, return 400 INVALID_REQUEST.
-    
-
-Filtering
-
-- `filter[field]=value` with exact match.
-    
-- Lists: repeat the same key `filter[tag]=a&filter[tag]=b`.
-    
-- Ranges: `filter[field][gte]=...`, `filter[field][lte]=...`.
-    
+- Cursor-based paging with the shared `page_size` + `next_cursor` pattern defined under `components/parameters` and `components/schemas` in `openapi.yaml`. `page_size` defaults to 50, caps at 200, and is scoped per tenant, route, and `next_cursor`.
+- Every pageable response embeds `pagination` metadata (`PaginationMetadata`) that reiterates the `page_size`, the opaque `next_cursor`, and hints whether more pages exist. Clients should return the prior `next_cursor` as the `next_cursor` query parameter.
+- Sorting and filtering options stay the same (stable sort on `id`, `sort=field` or `sort=-field`, `filter[field]=value`, `filter[field][gte]`, `filter[field][lte]`), and the pagination cursor encodes tenant and sort state.
 
 List response shape
 
 ```json
 {
   "data": [ ... ],
-  "next": "cursor_or_null",
-  "limit": 50
+  "pagination": {
+    "page_size": 50,
+    "next_cursor": "opaque-cursor-token-01"
+  }
 }
 ```
 
@@ -187,17 +151,13 @@ List response shape
 
 Idempotency
 
-- All write verbs require `Idempotency-Key`. See API-001 for storage.
-    
-- On replay return identical status and body. Add `Idempotent-Replay: true`.
-    
+- All write verbs require `Idempotency-Key`. See API-001 for storage, TTL, and conflict semantics.
+- On replay return the identical status/body and `Idempotent-Replay: true`. Divergent payloads return `409 CONFLICT`.
 
 Optimistic concurrency
 
-- `etag` header supports conditional updates.
-    
-- Requests may send `If-Match: "<etag>"`. On mismatch return `409 CONFLICT`.
-    
+- `etag` header supports conditional updates.
+- Requests may send `If-Match: "<etag>"`. On mismatch return `409 CONFLICT`.
 
 ---
 

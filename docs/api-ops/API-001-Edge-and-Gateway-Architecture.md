@@ -94,38 +94,37 @@ Provide a stable, secure, multi-tenant external API surface with predictable per
 
 ## 4. Authentication and authorization
 
-**End users**
+The canonical auth story is JWT access tokens issued by Cognito User Pools; SigV4 is kept as a deliberate fallback for internal service-to-service or administrative automation flows that cannot use OIDC while still honoring the same tenant context defined in SEC-005. All business endpoints require `Tenant-Id`, `Correlation-Id`, and an authenticated caller.
 
-- Cognito User Pools as OIDC provider
-    
-- JWT access tokens in Authorization header
-    
-- Token lifetime 60 minutes. Refresh via OIDC flow only
-    
-- Required scopes example: `jobs:read`, `jobs:write`, `webhooks:manage`
-    
+**Primary user and partner flows**
 
-**Service to service**
+- Cognito User Pools acts as the OIDC and authorization server.
+- JWT access tokens are presented in the `Authorization: Bearer <token>` header and live for 60 minutes; refreshes must use the standard OIDC refresh flow.
+- Example scopes: `jobs:read`, `jobs:write`, `webhooks:manage`, with additional scopes granted per product.
+- The gateway validates that the `tenant_id` claim matches the `Tenant-Id` header, and rejects requests that fail the ULID format or omit the header (see SEC-005 for the canonical tenant contract).
 
-- SigV4 with IAM roles and resource policies
-    
-- Optional mTLS for partners using SPIFFE IDs
-    
-- Short lived credentials via STS. Max 1 hour
-    
+**Service-to-service fallback**
+
+- SigV4 with IAM roles and resource policies is available for internal runners, system integrations, and partner adapters that originate from AWS workloads.
+- Optional mTLS (SPIFFE) can be layered for high-sensitivity partners, and short-lived credentials are issued through STS (max 1 hour).
+- IAM policies map roles to tenant ULIDs and Gateway policies enforce that the provided `Tenant-Id` header matches the role-to-tenant mapping before forwarding the request; the same quotas and throttles apply.
 
 **Policy engine**
 
-- Resource based checks in API Gateway and ALB
-    
-- Fine grained checks in services using Cedar or OPA bundles
-    
-- Every request includes `Tenant-Id` header
+- Resource-based checks run in API Gateway and ALB, with fine-grained decisions handled in-service via Cedar or OPA bundles.
+- Every request includes `Tenant-Id` header, and the tenant contract in SEC-005 defines header validation, propagation, and logging expectations.
+
+**Error semantics**
+
+- `401 UNAUTHENTICATED` is returned when the `Authorization` header is missing, the JWT fails validation, or the SigV4 signature cannot be verified. The gateway surfaces `UNAUTHENTICATED` with the RFC 7807 `error.code` documented in the API error catalog.
+- `403 UNAUTHORIZED` is returned when credentials are valid but the caller lacks required scopes, policy denies access, or the tenant header does not align with the authenticated identity. See docs/api-ops/API-Error-Catalog.md for the canonical error codes and retry guidance.
     
 
 ---
 
 ## 5. Multi tenancy and isolation
+
+Tenant-Id format, isolation controls, and quota routing live in docs/security-controls/SEC-005-Multitenancy-Policy.md; this section summarizes the operational outcomes.
 
 **Decision**: Row level isolation with strict tenant column and RLS in Postgres for control planes. Separate databases for noisy data planes. S3 prefixes per tenant with bucket policies.
 
@@ -168,11 +167,9 @@ Provide a stable, secure, multi-tenant external API surface with predictable per
 
 **Pagination**
 
-- Cursor based
-    
-- `?limit=50&after=<cursor>`
-    
-- `limit` max 200. Default 50
+- Shared pagination metadata includes `page_size` (default 50, max 200) and `next_cursor` returned in the response metadata; all pageable endpoints use the same `PaginationMetadata` contract in `openapi.yaml`.
+- Controls: cursor-based only, `page_size`/`limit` controls the number of results (default 50, max 200), and the opaque `next_cursor` tags the following page; clients should pass the prior response’s cursor back via the `next_cursor` parameter and not mutate it.
+- Sorting and filtering remain stable: `sort=field` or `sort=-field` (ties resolved by id), and `filter[field]=value` or range filters (`filter[field][gte]`, `filter[field][lte]`). The pagination metadata in the response (and `next_cursor`) is tenant-scoped.
     
 
 **Filtering and sort**
@@ -186,20 +183,27 @@ Provide a stable, secure, multi-tenant external API surface with predictable per
 
 ---
 
-## 7. Idempotency
+## 7. Idempotency semantics
 
-**Scope**: All non GET write operations.  
-**Storage**: DynamoDB table `idempotency_store` with 24 hour TTL.  
-**Key**: Hash of `Idempotency-Key` + route + tenant + body hash.  
-**Behavior**
+**Scope**
 
-- First request executes and stores response code, body hash, headers subset, expiry, and execution fingerprint
-    
-- Subsequent requests return stored response with `Idempotent-Replay: true`
-    
-- Safe to retry on 5xx or network failure
-    
-- Not applied to endpoints marked as non idempotent in spec
+- Applies to all tenant-scoped mutations that require `Idempotency-Key` (ingest events, admin reindex jobs, security actions). The key scope is bound to the tenant (`Tenant-Id`), HTTP method, canonical route, and a hash of the request body so clients may safely reuse the same key within the same tenant and endpoint, but never across tenants or routes.
+
+**Storage and cleanup**
+
+- A DynamoDB table named `idempotency_store` records each key along with the route, tenant, payload fingerprint, cached response payload, and expiry timestamp. The TTL is fixed at 24 hours so entries automatically expire; a nightly cleanup job prunes tombstones to keep the table compact.
+- Stored responses include the original status code, a minimal header subset, and `Idempotent-Replay: true` so replayed requests can differentiate cached replies from fresh executions.
+
+**Conflict behavior**
+
+- When a repeat request arrives with the same key and an identical payload fingerprint, the cached response is returned with `Idempotent-Replay: true`. When the payload or route differs but the key matches, the gateway rejects the call with `409 CONFLICT` (see `docs/api-ops/API-Error-Catalog.md`), because the operation cannot be safely retried.
+- `409 CONFLICT` serves as the “already processed” signal; `400 INVALID_REQUEST` still denotes schema or header issues, while `401/403`, `429`, and `5xx` retain their usual semantics.
+- Security action endpoints surface this guard via their existing `409` response: the `SecurityActionResponse` includes `status: duplicate` when the same `action_id`/key pair is replayed.
+
+**Retry guidance**
+
+- Retry idempotent writes only on `500 INTERNAL` or `503 UNAVAILABLE` and then only once after a delay; `409 CONFLICT` indicates a divergent payload and must not be retried without a new key.
+
     
 
 ---
@@ -219,21 +223,7 @@ JSON envelope:
 }
 ```
 
-**HTTP mapping**
-
-|HTTP|Code|Notes|
-|--:|---|---|
-|400|INVALID_REQUEST|Schema or semantic validation|
-|401|UNAUTHENTICATED|Missing or invalid token|
-|403|UNAUTHORIZED|Scope or policy denied|
-|404|RESOURCE_NOT_FOUND|No existence under tenant|
-|409|CONFLICT|State conflict|
-|422|UNPROCESSABLE_ENTITY|Domain rule violated|
-|429|RATE_LIMITED|Rate or quota exceeded|
-|500|INTERNAL|Unhandled error|
-|503|UNAVAILABLE|Brownout or dependency outage|
-
-Do not leak internal stack traces. Put the fingerprint in logs only.
+The HTTP status, retry guidance, and RFC 7807 payload shapes for each error code are documented in docs/api-ops/API-Error-Catalog.md; implementations must not deviate from that catalogue. Do not leak internal stack traces—keep diagnostic fingerprints in logs only.
 
 ### Security action endpoints
 

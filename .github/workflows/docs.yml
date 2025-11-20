@@ -1,0 +1,35 @@
+name: Docs and Contracts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  docs-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install lint tooling
+        run: npm install -g markdownlint-cli @stoplight/spectral-cli
+
+      - name: Markdownlint
+        run: markdownlint docs AGENTS.md
+
+      - name: Spectral OpenAPI lint
+        run: spectral lint openapi.yaml
+
+      - name: Link checker
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: "--verbose docs/**/*.md AGENTS.md openapi.yaml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

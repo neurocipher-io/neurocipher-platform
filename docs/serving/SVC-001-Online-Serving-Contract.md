@@ -62,8 +62,8 @@ query PatientSnapshot($tenant: ID!, $id: ID!) {
 - Auth: SigV4 + IAM for internal, OAuth for partner-facing; never mix across stages.  
 - Payload size hard limit 2 MB; reject larger requests with `413 Payload Too Large`.  
 - Standard headers for online serving endpoints: `Authorization`, `Tenant-Id`, `Correlation-Id`, and `Idempotency-Key` for mutating writes, aligned with `openapi.yaml` (`/query`, `/ingest/event`) and API-001.  
-- Pagination: cursor-based using `top_k` (or `limit`) query parameters and the `next_cursor` field in the response body, as defined in the `QueryResponse` schema.  
-- Error model: HTTP 4xx/5xx responses use the `ErrorResponse` envelope from `openapi.yaml` with stable error codes for INVALID_REQUEST (400), UNAUTHENTICATED (401), UNAUTHORIZED (403), RESOURCE_NOT_FOUND (404), CONFLICT (409), RATE_LIMITED (429), and INTERNAL/UNAVAILABLE (5xx).  
+- Pagination: cursor-based using the `page_size` query parameter and the `pagination.next_cursor` metadata returned in the payload; the shared `PaginationMetadata` contract lives in `openapi.yaml`.  
+- Error model: HTTP 4xx/5xx responses use the `ErrorResponse` envelope from `openapi.yaml` with the canonical codes cataloged in docs/api-ops/API-Error-Catalog.md.  
 - Quotas: default per-tenant QPS and burst limits must match the rate-limit header values (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`) and the plans defined in API-001 / OBS-003; overrides require documented exceptions.
 
 ## 6. Observability & SLOs

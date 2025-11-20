@@ -1,4 +1,4 @@
-1. Scope and objectives
+## 1. Scope and objectives
 
   
 
@@ -14,7 +14,7 @@
 
   
 
-2. Success criteria
+## 2. Success criteria
 
   
 
@@ -32,7 +32,7 @@
 
   
 
-3. Deliverables
+## 3. Deliverables
 
   
 
@@ -51,7 +51,7 @@
 
   
 
-4. Tech baseline
+## 4. Tech baseline
 
   
 
@@ -70,7 +70,7 @@
 
   
 
-5. Repository layout
+## 5. Repository layout
 
   
 
@@ -154,7 +154,7 @@ neurocipher-data-pipeline/
 
   
 
-6. Branching and release
+## 6. Branching and release
 
   
 
@@ -170,7 +170,7 @@ neurocipher-data-pipeline/
 
   
 
-7. Environments
+## 7. Environments
 
   
 
@@ -186,7 +186,7 @@ neurocipher-data-pipeline/
 
   
 
-8. Secrets and identity
+## 8. Secrets and identity
 
   
 
@@ -204,7 +204,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-9. Data contracts
+## 9. Data contracts
 
   
 
@@ -220,7 +220,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-10. Ingestion policy
+## 10. Ingestion policy
 
   
 
@@ -236,7 +236,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-11. Normalization
+## 11. Normalization
 
   
 
@@ -251,14 +251,14 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-12. Embeddings
+## 12. Embeddings
 
   
 
   
 
 - Model selector by modality and token budget.
-- Store vectors in Weaviate. Store raw in S3. Store metadata in DynamoDB.
+- Store vectors in Weaviate. Store raw in S3. Store metadata in the Postgres metadata catalog (see DM-003).
 - Batch size and concurrency controlled by SQS visibility.
 
   
@@ -267,7 +267,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-13. Indexing and retrieval
+## 13. Indexing and retrieval
 
   
 
@@ -283,7 +283,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-14. Observability
+## 14. Observability
 
   
 
@@ -299,7 +299,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-15. Security
+## 15. Security
 
   
 
@@ -316,7 +316,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-16. Performance targets
+## 16. Performance targets
 
   
 
@@ -332,7 +332,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-17. Testing
+## 17. Testing
 
   
 
@@ -348,19 +348,19 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-18. CI/CD workflow order
+## 18. CI/CD workflow order
 
   
 
   
 
-19. Lint, type check, unit tests.
-20. Contract diff and schema validation.
-21. Build containers. SBOM + scan.
-22. Deploy preview stack. Run e2e.
-23. Promote to stg with manual gate.
-24. Run load and relevance tests.
-25. Manual approval to prod.
+1. Lint, type check, unit tests.
+2. Contract diff and schema validation.
+3. Build containers. SBOM + scan.
+4. Deploy preview stack. Run e2e.
+5. Promote to stg with manual gate.
+6. Run load and relevance tests.
+7. Manual approval to prod.
 
   
 
@@ -368,7 +368,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-26. Operational runbooks
+## 19. Operational runbooks
 
   
 
@@ -386,7 +386,7 @@ Platform-wide identifiers (env slugs, bucket names, API prefixes) are cataloged 
 
   
 
-20. Definition of done
+## 20. Definition of done
 
   
 
