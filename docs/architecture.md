@@ -335,18 +335,19 @@ Weaviate
 
   
 
-- Classes: TextDoc, ImageDoc, AudioDoc
-- External vectorizer. Shards by doc_id hash
-
+- Canonical vector class: `NcChunkV1` (chunk-level vectors for `nc.document_chunk`), multi-tenant with tenant keyed by `account_id`.
+- Schema stored in `schemas/weaviate/nc-chunk-v1.json` and mirrored from `nc.document_chunk` / `nc.embedding_ref`.
+- External vectorizer. HNSW index with HA tuning per DM-003.
   
-
   
-
+  
 OpenSearch
 
   
 
-- Index per entity
+- Index per entity, with chunk-level index pattern `nc-chunk-v1-*` for `nc.document_chunk`.
+- Index template and ILM policy live under `schemas/opensearch/chunk-v1.json` and `schemas/opensearch/policies/chunk-v1-ilm.json`.
+- BM25 for keyword and filters; always filter by `account_id` for multi-tenancy.
 - ILM enabled
 - BM25 for keyword and filters
 

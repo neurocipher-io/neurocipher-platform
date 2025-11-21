@@ -35,8 +35,6 @@ Define the authoritative physical design for PostgreSQL, S3, and Weaviate. Cover
 
 ## **2. Scope and assumptions**
 
-  
-
 In scope: all DM-001 entities. Storage targets: PostgreSQL 15+, S3 with SSE-KMS, Weaviate 1.24+ multi-tenant.
 
 Out of scope: BI semantic models, UI view models.
@@ -50,7 +48,6 @@ Tenant context validation and quota guardrails align with docs/security-controls
 - Per ADR-001 and DM-001, the canonical metadata catalog (asset, source_document, ingestion_job, scan, finding, evidence, etc.) lives in PostgreSQL (`nc.*` schema) with RLS enforcing tenant identity.
 - This Postgres metadata store is the single view for control-plane signals, lineage, and operational reporting; DynamoDB hosts auxiliary workloads (idempotency guard, temporary caches) but is not the canonical metadata engine.
 
-
 ## **2.2 Vector store contract**
 
 - **Weaviate class naming**: The canonical vector class is `NcChunkV1`. Each incompatible schema bump increments the suffix (`NcChunkV2`, etc.), and all references (DM-005 §8.10, PROC-003 §68, DCON-001 §202) must cite the newest `NcChunkV{n}` value. The class stores embedding vectors and metadata mirrored from `nc.document_chunk` rows (see §6.8).
@@ -58,7 +55,11 @@ Tenant context validation and quota guardrails align with docs/security-controls
 - **Metadata linkage**: `nc.embedding_ref` rows reference the active Weaviate class via `weaviate_class` (for example `NcChunkV1`, `NcChunkV2`). The class version is encoded in the `weaviate_class` name; there is no separate `class_version` column in the table schema.
 - **Observability & metrics**: Dashboards, SLOs, and alerts track `weaviate_query_duration_seconds`, `weaviate_upsert_latency_seconds`, and `weaviate_replica_health` (see `OBS-002` and `REL-002`). Vector store quotas depend on this class and the API Gateway `X-RateLimit-*` headers.
 
-  
+## **2.3 Implementation status**
+
+- Core ingestion metadata tables are implemented in draft form by `migrations/postgres/0001_nc_core_metadata.sql` on the feature branch used for DM-003 v1.2 (`feat/db-physical-schemas-v1`).
+- Tables covered: `nc.account`, `nc.data_source`, `nc.source_document`, `nc.document_chunk`, and `nc.ingestion_job` with RLS and tenant-context triggers as defined in §5–§7.
+- Remaining tables, vector schemas, and search index artifacts follow in subsequent migrations and schema JSON files referenced later in this document.
 
 ## **3. Non-functional requirements**
 
