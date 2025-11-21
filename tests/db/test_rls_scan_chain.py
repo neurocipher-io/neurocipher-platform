@@ -92,6 +92,22 @@ def setup_test_data(db_connection):
 
 def count_rows(cursor, table_name):
     """Helper to count rows in a table with current tenant context."""
+    # Whitelist of allowed table names to prevent SQL injection
+    allowed_tables = {
+        "scan",
+        "policy",
+        "finding",
+        "evidence",
+        "remediation",
+        "ticket",
+        "integration",
+        "notification",
+        "asset",
+    }
+
+    if table_name not in allowed_tables:
+        raise ValueError(f"Invalid table name: {table_name}")
+
     query = f"""
         SELECT count(*) 
         FROM nc.{table_name} 

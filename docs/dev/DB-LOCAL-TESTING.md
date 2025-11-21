@@ -253,5 +253,5 @@ To enable in CI, add these steps to your pipeline:
 ## References
 
 - [DM-003 Physical Schemas and Storage Map](../data-models/DM-003-Physical-Schemas-and-Storage-Map.md)
-- [Migrations Directory](../../migrations/postgres/)
+- Migrations: `/migrations/postgres/` (0001_nc_core_metadata.sql, 0002_nc_security_and_finding_chain.sql, 0003_nc_app_role.sql)
 - [Pytest Documentation](https://docs.pytest.org/)
