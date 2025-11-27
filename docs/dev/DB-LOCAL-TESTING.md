@@ -132,9 +132,9 @@ Validates that when `app.account_id` is null (via `RESET app.account_id`), zero 
 Validates the complete chain:
 
 ```
-scan_001 → finding_001 → evidence_001
-                       → remediation_001
-                       → ticket_001
+scan_001 → find_001 → evidence_001
+                    → remediation_001
+                    → ticket_001
 ```
 
 Also verifies that all foreign key relationships are intact.

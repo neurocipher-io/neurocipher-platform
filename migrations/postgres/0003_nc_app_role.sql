@@ -3,9 +3,17 @@
 
 -- Create the application role if it doesn't exist
 DO $$
+DECLARE
+  v_password text := current_setting('nc.app_rw_password', true);
 BEGIN
+  IF v_password IS NULL OR v_password = '' THEN
+    RAISE EXCEPTION 'nc_app_rw password must be provided via setting nc.app_rw_password';
+  END IF;
+
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'nc_app_rw') THEN
-    CREATE ROLE nc_app_rw WITH LOGIN PASSWORD 'nc_app_rw';
+    EXECUTE format('CREATE ROLE nc_app_rw WITH LOGIN PASSWORD %L', v_password);
+  ELSE
+    EXECUTE format('ALTER ROLE nc_app_rw WITH LOGIN PASSWORD %L', v_password);
   END IF;
 END$$;
 

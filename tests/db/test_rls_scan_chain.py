@@ -42,8 +42,14 @@ def db_connection(db_config):
 
     conn = psycopg2.connect(**db_config)
     conn.autocommit = False
-    yield conn
-    conn.close()
+    try:
+        yield conn
+    finally:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        conn.close()
 
 
 @pytest.fixture(scope="module")
@@ -65,29 +71,34 @@ def setup_test_data(db_connection):
     yield
 
     # Cleanup: Delete all test data
-    with db_connection.cursor() as cur:
-        # Set tenant context for cleanup
-        cur.execute("SET SESSION app.account_id = 'acct_scan_1'")
+    try:
+        with db_connection.cursor() as cur:
+            # Set tenant context for cleanup
+            cur.execute("SET SESSION app.account_id = 'acct_scan_1'")
 
-        # Delete in reverse order of dependencies
-        cur.execute("DELETE FROM nc.notification WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.integration WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.ticket WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.remediation WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.evidence WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.finding WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.asset WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.scan WHERE account_id = 'acct_scan_1'")
-        cur.execute("DELETE FROM nc.policy WHERE account_id = 'acct_scan_1'")
+            # Delete in reverse order of dependencies
+            cur.execute("DELETE FROM nc.notification WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.integration WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.ticket WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.remediation WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.evidence WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.finding WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.asset WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.scan WHERE account_id = 'acct_scan_1'")
+            cur.execute("DELETE FROM nc.policy WHERE account_id = 'acct_scan_1'")
 
-        # Control is not tenant-scoped, but delete it if exists
-        cur.execute("RESET app.account_id")
-        cur.execute("DELETE FROM nc.control WHERE id = 'ctrl_001'")
+            # Control is not tenant-scoped, but delete it if exists
+            cur.execute("RESET app.account_id")
+            cur.execute("DELETE FROM nc.control WHERE id = 'ctrl_001'")
 
-        # Delete account (must be done without tenant context set)
-        cur.execute("DELETE FROM nc.account WHERE id = 'acct_scan_1'")
+            # Delete account (must be done without tenant context set)
+            cur.execute("DELETE FROM nc.account WHERE id = 'acct_scan_1'")
 
-        db_connection.commit()
+            db_connection.commit()
+    except Exception as cleanup_err:
+        db_connection.rollback()
+        print(f"Cleanup encountered an error: {cleanup_err}")
+        raise
 
 
 def count_rows(cursor, table_name):

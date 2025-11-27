@@ -6,6 +6,7 @@ PG_PORT ?= 5432
 PG_USER ?= postgres
 PG_PASSWORD ?= postgres
 PG_DB ?= nc_dev
+NC_APP_RW_PASSWORD ?=
 
 .PHONY: fmt lint test db_local_up db_local_migrate db_local_down db_local_smoke_test
 
@@ -45,13 +46,14 @@ db_local_up:
 # For convenience in local development, drop and recreate $(PG_DB) each time so
 # migrations can assume a clean baseline without needing IF NOT EXISTS on every object.
 db_local_migrate:
-	@docker exec -i $(PG_CONTAINER_NAME) sh -lc 'set -e; \
-	  dropdb -U $(PG_USER) $(PG_DB) >/dev/null 2>&1 || true; \
-	  createdb -U $(PG_USER) $(PG_DB); \
-	  for f in /workspace/migrations/postgres/*.sql; do \
-	    echo "Applying $$f"; \
-	    psql -U $(PG_USER) -d $(PG_DB) -v ON_ERROR_STOP=1 -f "$$f"; \
-	  done'
+@test -n "$(NC_APP_RW_PASSWORD)" || (echo "NC_APP_RW_PASSWORD must be set to apply migrations" && exit 1)
+@docker exec -i $(PG_CONTAINER_NAME) sh -lc 'set -e; \
+          dropdb -U $(PG_USER) $(PG_DB) >/dev/null 2>&1 || true; \
+          createdb -U $(PG_USER) $(PG_DB); \
+          for f in /workspace/migrations/postgres/*.sql; do \
+            echo "Applying $$f"; \
+            PGOPTIONS="-c nc.app_rw_password=$(NC_APP_RW_PASSWORD)" psql -U $(PG_USER) -d $(PG_DB) -v ON_ERROR_STOP=1 -f "$$f"; \
+          done'
 
 # Stop the local Postgres container if it is running.
 db_local_down:
@@ -59,17 +61,17 @@ db_local_down:
 
 # Install Python test dependencies if needed
 db_test_deps:
-	@which pytest > /dev/null 2>&1 || pip install -q -r tests/requirements.txt
+@pip install -q -r tests/requirements.txt
 
 # Run local smoke tests for RLS and scan → finding → ticket chain
 # Prerequisites: Docker running, db_local_up and db_local_migrate completed
 # Usage: NC_DB_LOCAL_TEST=1 make db_local_smoke_test
 db_local_smoke_test: db_local_up db_local_migrate db_test_deps
-	@echo "Running local smoke tests for multi-tenant RLS and scan chain..."
-	@NC_DB_LOCAL_TEST=1 \
-	 NC_DB_HOST=localhost \
-	 NC_DB_PORT=$(PG_PORT) \
-	 NC_DB_NAME=$(PG_DB) \
-	 NC_DB_USER=nc_app_rw \
-	 NC_DB_PASSWORD=nc_app_rw \
-	 pytest tests/db/test_rls_scan_chain.py -v
+@echo "Running local smoke tests for multi-tenant RLS and scan chain..."
+@NC_DB_LOCAL_TEST=1 \
+ NC_DB_HOST=localhost \
+ NC_DB_PORT=$(PG_PORT) \
+ NC_DB_NAME=$(PG_DB) \
+ NC_DB_USER=nc_app_rw \
+ NC_DB_PASSWORD=$(NC_APP_RW_PASSWORD) \
+ pytest tests/db/test_rls_scan_chain.py -v
