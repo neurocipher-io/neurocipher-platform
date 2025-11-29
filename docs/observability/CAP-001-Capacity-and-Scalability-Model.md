@@ -1,8 +1,10 @@
+---
 id: CAP-001
 title: Capacity and Scalability Model
 owner: Platform SRE
 status: Draft
 last_reviewed: 2025-11-20
+---
 
 # CAP-001 Capacity and Scalability Model
 

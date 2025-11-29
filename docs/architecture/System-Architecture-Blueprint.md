@@ -1,8 +1,10 @@
+---
 id: ARCH-BLUEPRINT-001
 title: System Architecture Blueprint
 owner: Architecture Lead
 status: Existing
 last_reviewed: 2025-11-29
+---
 
 # Neurocipher Data Pipeline — System Architecture Blueprint
 

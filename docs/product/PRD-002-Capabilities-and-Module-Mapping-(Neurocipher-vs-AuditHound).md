@@ -1,8 +1,10 @@
+---
 id: PRD-002
 title: Capabilities and Module Mapping (Neurocipher vs AuditHound)
 owner: Product Management
 status: Approved for implementation
 last_reviewed: 2025-11-25
+---
 
 # PRD-002 Capabilities and Module Mapping (Neurocipher vs AuditHound)
 

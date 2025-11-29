@@ -1,8 +1,10 @@
+---
 id: PRD-001
 title: Neurocipher Platform Vision and Scope
 owner: Product Management
 status: Draft for review
 last_reviewed: 2025-11-26
+---
 
 # PRD-001 Neurocipher Platform Vision and Scope
 

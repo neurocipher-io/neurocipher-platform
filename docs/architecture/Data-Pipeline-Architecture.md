@@ -1,8 +1,10 @@
+---
 id: ARCH-DP-001
 title: Data Pipeline Architecture
 owner: Platform Architecture
 status: Existing
 last_reviewed: 2025-11-29
+---
 
 # Neurocipher Data Pipeline — Architecture
 

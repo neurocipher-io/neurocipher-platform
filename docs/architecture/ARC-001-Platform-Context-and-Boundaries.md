@@ -1,8 +1,10 @@
+---
 id: ARC-001
 title: Platform Context and Boundaries
 owner: Architecture Lead
 status: Tier-1 Stub
 last_reviewed: 2025-11-26
+---
 
 # ARC-001 Platform Context and Boundaries
 

@@ -1,8 +1,10 @@
+---
 id: DCON-001
 title: Data Contract Specification
 owner: Data Architecture
 status: For Board Review
 last_reviewed: 2025-11-06
+---
 
 # DCON-001 — Data Contract Specification
 

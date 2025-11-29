@@ -1,8 +1,10 @@
+---
 id: REF-002
 title: Platform Constants
 owner: Platform Architecture
 status: Draft
 last_reviewed: 2025-11-10
+---
 
 # REF-002 Platform Constants
 
