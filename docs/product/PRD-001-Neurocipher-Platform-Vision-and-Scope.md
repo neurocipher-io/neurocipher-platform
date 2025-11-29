@@ -1,11 +1,10 @@
-# PRD-001 Neurocipher Platform Vision and Scope
+id: PRD-001
+title: Neurocipher Platform Vision and Scope
+owner: Product Management
+status: Draft for review
+last_reviewed: 2025-11-26
 
-Status: Draft for review  
-Owner: Product Management  
-Approvers: Architecture Board, Security Engineering  
-Last updated: 2025-11-26  
-Applies to: Neurocipher Platform (Core, Data Pipeline, AuditHound, Agent Forge, MCP)  
-Related: REF-001 Glossary-and-Standards-Catalog, PRD-002 Capabilities and Module Mapping, ARC-001 Platform Context and Boundaries, SEC-001 Threat Model and Mitigation Matrix  
+# PRD-001 Neurocipher Platform Vision and Scope
 
 ## 1. Purpose
 

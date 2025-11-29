@@ -1,11 +1,10 @@
-# PRD-002 Capabilities and Module Mapping (Neurocipher vs AuditHound)
+id: PRD-002
+title: Capabilities and Module Mapping (Neurocipher vs AuditHound)
+owner: Product Management
+status: Approved for implementation
+last_reviewed: 2025-11-25
 
-Status: Approved for implementation
-Owner: Product Management
-Approvers: Architecture Board
-Last updated: 2025-11-25
-Applies to: Neurocipher Platform (Core, Data Pipeline, Agent Forge) and AuditHound
-Related: REF-001 Glossary and Standards Catalog, ARC-001 Platform Context and Boundaries, SEC-001 Threat Model and Mitigation Matrix, ADR-001 AWS-Native Baseline
+# PRD-002 Capabilities and Module Mapping (Neurocipher vs AuditHound)
 
 ## 1. Purpose
 

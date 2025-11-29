@@ -4,29 +4,9 @@ owner: Data Architecture
 status: For Board Review
 last_reviewed: 2025-11-06
 
-DCON-001 — Data Contract Specification
+# DCON-001 — Data Contract Specification
 
-  
-
-  
-
-Status: For Board Review
-
-Owner: Data Architecture
-
-Applies to: Neurocipher Data Pipeline (see docs/integrations/)
-
-Last Updated: 2025-11-06
-
-Region: ca-central-1
-
-  
-
-  
-
-  
-
-  
+## 1. Purpose
 
 1. Purpose
 

@@ -1,11 +1,10 @@
-Status: Tier-1 Stub  
-Owner: Architecture Lead  
-Approvers: Architecture Board  
-Last updated: 2025-11-26  
-Applies to: Neurocipher Platform (all modules)  
-Related: PRD-001, PRD-002, GOV-ARCH-001, SEC-001, REF-001, REF-002
+id: ARC-001
+title: Platform Context and Boundaries
+owner: Architecture Lead
+status: Tier-1 Stub
+last_reviewed: 2025-11-26
 
------
+# ARC-001 Platform Context and Boundaries
 
 ## 1. Purpose
 

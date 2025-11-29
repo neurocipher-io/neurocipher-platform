@@ -101,6 +101,7 @@ The following sections enumerate each family with path, status, and tier.
 | ID           | Title                             | Path                                                                 | Status              | Tier  | Notes                             |
 |--------------|-----------------------------------|----------------------------------------------------------------------|---------------------|-------|-----------------------------------|
 | REF-001      | Glossary and Standards Catalog    | `docs/governance/REF-001-Glossary-and-Standards-Catalog.md`         | Existing            | 1     | Canonical naming and style rules. |
+| REF-002      | Platform Constants                | `docs/governance/REF-002-Platform-Constants.md`                     | Existing            | 1     | Canonical identifiers and constants. |
 | GOV-DEC-001  | Decision Governance               | `docs/governance/GOV-DEC-001-Decision-Governance.md`                | Existing            | 2     | Decision and approval process.    |
 | GOV-ARCH-001 | Architecture Documentation Index  | `docs/governance/GOV-ARCH-001-Architecture-Documentation-Index.md`  | Existing (this doc) | 1     | Index for all architecture docs.  |
 
@@ -108,7 +109,7 @@ The following sections enumerate each family with path, status, and tier.
 
 | ID       | Title                                            | Path                                                                                   | Status                      | Tier  | Notes                                                  |
 |----------|--------------------------------------------------|----------------------------------------------------------------------------------------|-----------------------------|-------|--------------------------------------------------------|
-| PRD-001  | Neurocipher Platform Vision and Scope            | `docs/product/PRD-001-Neurocipher-Platform-Vision-and-Scope.md`                       | Planned                     | 1     | Platform mission, segments, non-goals.                 |
+| PRD-001  | Neurocipher Platform Vision and Scope            | `docs/product/PRD-001-Neurocipher-Platform-Vision-and-Scope.md`                       | Draft for review            | 1     | Platform mission, segments, non-goals.                 |
 | PRD-002  | Capabilities and Module Mapping (Neurocipher vs AuditHound) | `docs/product/PRD-002-Capabilities-and-Module-Mapping-(Neurocipher-vs-AuditHound).md` | Approved for implementation | 1     | Canonical roles and boundaries for modules.            |
 | PRD-003  | MVP Vertical Slice Specification                 | `docs/product/PRD-003-MVP-Vertical-Slice-Specification.md`                            | Planned                     | 2     | One end-to-end slice from ingest to report.            |
 | BETA-001 | Beta Experiment and Feedback Plan                | `docs/product/BETA-001-Beta-Experiment-and-Feedback-Plan.md`                          | Planned                     | 4     | Cohorts, metrics, and evaluation criteria.             |
@@ -117,7 +118,7 @@ The following sections enumerate each family with path, status, and tier.
 
 | ID           | Title                                       | Path                                                                 | Status  | Tier  | Notes                                                      |
 |--------------|---------------------------------------------|----------------------------------------------------------------------|---------|-------|------------------------------------------------------------|
-| ARC-001      | Platform Context and Boundaries             | `docs/architecture/ARC-001-Platform-Context-and-Boundaries.md`      | Planned | 1     | System context, actors, trust boundaries.                  |
+| ARC-001      | Platform Context and Boundaries             | `docs/architecture/ARC-001-Platform-Context-and-Boundaries.md`      | Existing| 1     | System context, actors, trust boundaries.                  |
 | CORE-001     | Semantic Engine Architecture                | `docs/architecture/CORE-001-Semantic-Engine-Architecture.md`        | Planned | 2     | Neurocipher Core architecture and interfaces.              |
 | AH-001       | AuditHound Module Overview and Use Cases    | `docs/architecture/AH-001-AuditHound-Module-Overview-and-Use-Cases.md` | Planned | 2  | Product and flows for AuditHound.                          |
 | AH-002       | AuditHound Architecture and Integration     | `docs/architecture/AH-002-AuditHound-Architecture-and-Integration.md` | Planned | 2  | Technical architecture and dependencies.                   |
@@ -126,6 +127,7 @@ The following sections enumerate each family with path, status, and tier.
 | MCP-TASK-001 | MCP Task Specification                      | `docs/architecture/MCP-TASK-001-Task-Specification.md`              | Existing| 2     | Defines MCP task model and lifecycle.                      |
 | MCP-LEDGER-001 | MCP Ledger Specification                  | `docs/architecture/MCP-LEDGER-001-Ledger-Specification.md`          | Existing| 2     | Defines MCP decision and task ledger format.               |
 | —            | System Architecture Blueprint               | `docs/architecture/System-Architecture-Blueprint.md`                | Existing| 1     | High-level blueprint referenced by ARC-001.                |
+| —            | Data Pipeline Architecture                  | `docs/architecture/Data-Pipeline-Architecture.md`                   | Existing| 1     | Detailed data pipeline architecture.                       |
 
 ## 8. Data models and contracts
 
@@ -133,10 +135,10 @@ The following sections enumerate each family with path, status, and tier.
 |---------|-------------------------------------------------|----------------------------------------------------------------------|----------|-------|--------------------------------------------------------|
 | DM-003  | Physical Schemas and Storage Map                | `docs/data-models/DM-003-Physical-Schemas-and-Storage-Map.md`       | Existing | 1     | Postgres and storage layout.                          |
 | DM-005  | Governance, Versioning, and Migrations          | `docs/data-models/DM-005-Governance-Versioning-and-Migrations.md`   | Existing | 1     | Data versioning and migration rules.                  |
+| DCON-001| Data Contract Specification                     | `docs/data-models/DCON-001-Data-Contract-Specification.md`          | Existing | 1     | Global data contract rules and compatibility policy.  |
 | DM-004  | Canonical Asset and Identity Schema             | `docs/data-models/DM-004-Canonical-Asset-and-Identity-Schema.md`    | Planned  | 2     | Cloud-agnostic model for assets and identities.       |
 | DM-006  | Event and Telemetry Contract Catalog            | `docs/data-models/DM-006-Event-and-Telemetry-Contract-Catalog.md`   | Planned  | 2     | Catalog of event and command contracts.               |
 | SRG-001 | Schema Registry Specification                   | `docs/data-models/SRG-001-Schema-Registry-Specification.md`         | Planned  | 2     | How schemas are stored, versioned, and validated.     |
-| DCON-001| Data Contract Specification                     | `docs/data-models/DCON-001-Data-Contract-Specification.md`          | Planned  | 1     | Global data contract rules and compatibility policy.  |
 
 ## 9. Ingestion documentation
 
@@ -179,7 +181,7 @@ The following sections enumerate each family with path, status, and tier.
 | ID        | Title                                         | Path                                                                 | Status           | Tier  | Notes                                                   |
 |-----------|-----------------------------------------------|----------------------------------------------------------------------|------------------|-------|---------------------------------------------------------|
 | OBS-LOG-001 | Logging and Telemetry Baseline             | `docs/observability/OBS-LOG-001-Logging-and-Telemetry-Baseline.md`  | Draft for review | 2     | Common logging, metrics, and tracing requirements.      |
-| CAP-001   | Capacity and Scalability Model                | `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`      | Planned          | 3     | Capacity assumptions, scaling strategy, SLO drivers.    |
+| CAP-001   | Capacity and Scalability Model                | `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`      | Existing         | 3     | Capacity assumptions, scaling strategy, SLO drivers.    |
 | DR-001    | Disaster Recovery and Business Continuity     | `docs/observability/DR-001-Disaster-Recovery-and-Business-Continuity.md` | Planned    | 3     | RPO/RTO, backup strategy, and recovery sequence.       |
 | ROL-001   | Rollout and Release Strategy                  | `docs/observability/ROL-001-Rollout-and-Release-Strategy.md`        | Planned          | 3     | Canary, feature flags, and rollback patterns.           |
 | SVC-001   | External Service Contracts                    | `docs/observability/SVC-001-External-Service-Contracts.md`          | Planned          | 2     | External API contracts and compatibility guarantees.    |

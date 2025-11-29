@@ -1,20 +1,12 @@
-
-
 id: OBS-001
 title: Observability Strategy and Telemetry Standards
 owner: Platform Engineering
 status: Approved
 last_reviewed: 2025-10-24
 
-OBS-001 Observability Strategy and Telemetry Standards
+# OBS-001 Observability Strategy and Telemetry Standards
 
-  
-
-  
-
-  
-
-Scope
+## 1. Scope
 
   
 
