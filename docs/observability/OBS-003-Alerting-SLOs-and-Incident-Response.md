@@ -62,7 +62,7 @@ Includes ingestion APIs, background workers, vector index, orchestration tasks, 
 
   
 
-Refer to the canonical Retention & SLO matrix in OBS-001 §5 (and the capacity/cost model in `docs/CAP-001-Capacity-Model.md`) for the definitive targets, SLIs, and retention durations cited throughout this document. The same metrics (`http_request_duration_seconds`, `weaviate_query_duration_seconds`, `document_processing_latency_seconds`, `security_engine.decision_latency_ms`, etc.) power dashboards and alerting described below.
+Refer to the canonical Retention & SLO matrix in OBS-001 §5 (and the capacity/cost model in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`) for the definitive targets, SLIs, and retention durations cited throughout this document. The same metrics (`http_request_duration_seconds`, `weaviate_query_duration_seconds`, `document_processing_latency_seconds`, `security_engine.decision_latency_ms`, etc.) power dashboards and alerting described below.
 
   
 

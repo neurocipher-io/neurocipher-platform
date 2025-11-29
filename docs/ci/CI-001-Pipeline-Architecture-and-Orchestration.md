@@ -34,7 +34,7 @@ Default region: ca-central-1
 
 Provide a deterministic CI system with enforced quality gates, supply chain controls, and reproducible build artifacts that downstream CD trusts.
 
-Capacity and throughput assumptions that feed these quality gates are defined in `docs/CAP-001-Capacity-Model.md`.
+Capacity and throughput assumptions that feed these quality gates are defined in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`.
 
   
 

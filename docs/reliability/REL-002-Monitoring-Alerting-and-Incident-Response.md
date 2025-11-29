@@ -32,7 +32,7 @@ Date: 2025-10-24
 
 Provide unified observability, proactive alerting, and structured incident response to maintain reliability and minimize downtime across the Neurocipher Data Pipeline.
 
-The capacity and cost assumptions that drive these targets are described in `docs/CAP-001-Capacity-Model.md`; align alerts, dashboards, and incident escalations with that model’s QPS, queue, and vector throughput expectations.
+The capacity and cost assumptions that drive these targets are described in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`; align alerts, dashboards, and incident escalations with that model’s QPS, queue, and vector throughput expectations.
 
   
 

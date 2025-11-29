@@ -42,7 +42,7 @@ This document does not describe:
 ## 3. References
 
 - `docs/governance/REF-001 Glossary-and-Standards-Catalog.md`
-- `docs/System-Architecture-Blueprint.md`
+- `docs/architecture/System-Architecture-Blueprint.md`
 - `docs/security-controls/SEC-001 Threat-Model-and-Mitigation-Matrix.md`
 - `docs/adr/ADR-001 AWS-Native-Baseline.md`
 - `docs/audithound/AH-001 Module-Overview-and-Use-Cases.md` (when present)

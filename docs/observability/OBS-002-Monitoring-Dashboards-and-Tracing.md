@@ -32,7 +32,7 @@ Tags: monitoring / dashboards / tracing / observability / reliability
 
 Establish a single standard for metrics, dashboards, and distributed tracing across the Neurocipher Pipeline and external orchestrator (see docs/integrations/README.md) systems. The goal is full situational awareness, fast anomaly detection, and consistent telemetry across all services.
 
-This observability pattern is parameterized by the capacity/cost assumptions in `docs/CAP-001-Capacity-Model.md`; the KPIs below inherit the same QPS, queue, and Weaviate throughput targets referenced by OBS-001.
+This observability pattern is parameterized by the capacity/cost assumptions in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`; the KPIs below inherit the same QPS, queue, and Weaviate throughput targets referenced by OBS-001.
 
   
 

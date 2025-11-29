@@ -213,7 +213,7 @@ Cost controls
 
 The table above is the canonical source for SLO targets and retention durations cited throughout OBS-003, REL-002, OPS-001, and DR-001. Alert routing, burn-rate policies, and incident readiness refer to these targets when they mention availability, latency, or retention-specific evidence.
 
-Capacity and cost assumptions that tune these targets (baseline QPS, queue margin, Weaviate throughput, and cost levers) live in `docs/CAP-001-Capacity-Model.md`; reference that document when tuning alarms or adjusting SLO thresholds.
+Capacity and cost assumptions that tune these targets (baseline QPS, queue margin, Weaviate throughput, and cost levers) live in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`; reference that document when tuning alarms or adjusting SLO thresholds.
 
 OBS-002 Monitoring, Dashboards, and Tracing
 

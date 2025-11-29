@@ -24,7 +24,7 @@ last_reviewed: 2025-11-15
 
 Provide deterministic delivery, environment isolation, and controlled promotion from dev to prod with auditability and rapid rollback.
 
-This delivery guardrails reference the throughput and queue capacity assumptions captured in `docs/CAP-001-Capacity-Model.md`.
+This delivery guardrails reference the throughput and queue capacity assumptions captured in `docs/observability/CAP-001-Capacity-and-Scalability-Model.md`.
 
   
 
