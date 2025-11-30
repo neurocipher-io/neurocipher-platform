@@ -16,7 +16,11 @@ neurocipher-platform/
 │   ├── ai/                   # Model architecture, guardrails
 │   └── observability/        # Logging, metrics, DR, release strategy
 ├── services/                 # Backend services
-│   └── nc-data-pipeline/     # Data ingestion and processing
+│   ├── nc-data-pipeline/     # Data ingestion and processing
+│   ├── nc-core/              # Semantic engine for risk reasoning
+│   ├── nc-audithound-api/    # Compliance assessment and reporting
+│   ├── nc-agent-forge/       # Auto-remediation orchestration
+│   └── nc-mcp-server/        # Model Context Protocol integration
 ├── libs/                     # Shared Python libraries
 │   └── python/
 │       ├── nc_models/        # Canonical Pydantic models
@@ -34,11 +38,13 @@ neurocipher-platform/
 
 | Module | Purpose | Status |
 |--------|---------|--------|
-| **Neurocipher Core** | Continuous cloud security scanning | Planned |
-| **AuditHound** | Compliance assessment and reporting | Planned |
-| **Agent Forge** | Auto-remediation orchestration | Planned |
-| **MCP Server** | Model Context Protocol integration | Planned |
-| **Data Pipeline** | Ingestion, normalization, embedding, query | In progress |
+| **Neurocipher Core** | Semantic engine for cloud security risk reasoning | Skeleton |
+| **AuditHound** | Compliance assessment and reporting | Skeleton |
+| **Agent Forge** | Auto-remediation orchestration | Skeleton |
+| **MCP Server** | Model Context Protocol integration | Skeleton |
+| **Data Pipeline** | Ingestion, normalization, embedding, query | Skeleton |
+
+Each module has its own README with detailed purpose, responsibilities, and integration points. See the `services/` directory for implementations.
 
 ## Quick Start
 
