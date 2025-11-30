@@ -1,12 +1,42 @@
 ---
-id: ARCH-BLUEPRINT-001
-title: System Architecture Blueprint
+id: ARC-002
+title: Data Pipeline Architecture Blueprint
 owner: Architecture Lead
-status: Existing
-last_reviewed: 2025-11-29
+status: Active
+last_reviewed: 2025-11-30
+applies_to: [nc-data-pipeline]
+related:
+  - ARC-001-Platform-Context-and-Boundaries
+  - DM-003-Physical-Schemas-and-Storage-Map
+  - DM-005-Governance-Versioning-and-Migrations
+  - DCON-001-Data-Contract-Specification
+  - DPS-ING-001-Ingest-Service-Architecture
+  - DPS-NORM-001-Normalize-Service-Architecture
+  - DPS-API-001-API-Service-Architecture
 ---
 
-# Neurocipher Data Pipeline — System Architecture Blueprint
+# ARC-002 Data Pipeline Architecture Blueprint
+
+## Scope
+
+This document describes the architecture of the **nc-data-pipeline** subsystem only, which handles ingestion, normalization, embedding, and querying of security and configuration data.
+
+The data pipeline is one component of the broader Neurocipher platform. For platform-wide context, external actors, trust boundaries, and integration points with other modules (Neurocipher Core, AuditHound, Agent Forge, MCP Server), refer to [ARC-001 Platform Context and Boundaries](ARC-001-Platform-Context-and-Boundaries.md).
+
+This document focuses on:
+
+- Data flow from ingestion through normalization, embedding, and query
+- Storage architecture (S3, DynamoDB, Weaviate, OpenSearch)
+- Service components (ingest, normalize, embed, query API)
+- Network topology and security controls specific to the pipeline
+- Observability and failure modes
+
+This document does not cover:
+
+- Platform-level context and external actors (see ARC-001)
+- Other platform modules such as Neurocipher Core, AuditHound, or Agent Forge
+- Data model specifications (see DM-003, DM-005, DCON-001)
+- Detailed service contracts (see DPS-ING-001, DPS-NORM-001, DPS-API-001)
 
 ## 1. High level
 
@@ -424,3 +454,15 @@ sequenceDiagram
 - Weaviate outage: queue writes, serve keyword only with warning flag.
 - OpenSearch partial failure: serve vector only with degraded flag.
 - Schema break: block deploy via contract tests. Provide migrators.
+
+## Related documents
+
+This architecture blueprint should be read in conjunction with:
+
+- **[ARC-001 Platform Context and Boundaries](ARC-001-Platform-Context-and-Boundaries.md)**: Defines the overall platform context, external actors, trust boundaries, and integration points with other platform modules.
+- **[DM-003 Physical Schemas and Storage Map](../data-models/DM-003-Physical-Schemas-and-Storage-Map.md)**: Detailed schemas for Postgres metadata tables, DynamoDB documents, and vector store structures.
+- **[DM-005 Governance, Versioning, and Migrations](../data-models/DM-005-Governance-Versioning-and-Migrations.md)**: Schema versioning, compatibility rules, and migration procedures.
+- **[DCON-001 Data Contract Specification](../data-models/DCON-001-Data-Contract-Specification.md)**: Global data contract rules and compatibility policies for event schemas.
+- **[DPS-ING-001 Ingest Service Architecture](../services/DPS-ING-001-Ingest-Service-Architecture.md)**: Detailed architecture of the ingestion service.
+- **[DPS-NORM-001 Normalize Service Architecture](../services/DPS-NORM-001-Normalize-Service-Architecture.md)**: Detailed architecture of the normalization service.
+- **[DPS-API-001 API Service Architecture](../services/DPS-API-001-API-Service-Architecture.md)**: Detailed architecture of the query API service.

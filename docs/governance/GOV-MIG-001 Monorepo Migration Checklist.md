@@ -51,7 +51,7 @@ monorepo structure without breaking builds, tests, or deployment workflows.
   - [ ] Ingestion docs (ING-*) → `docs/ingestion/`
   - [ ] Security docs (SEC-*) → `docs/security-controls/`
   - [ ] MCP / governance / observability docs → correct subfolders.
-  - [x] `System-Architecture-Blueprint.md` → `docs/architecture/` (completed).
+  - [x] `System-Architecture-Blueprint.md` → `docs/architecture/ARC-002-Data-Pipeline-Architecture-Blueprint.md` (completed, renamed and re-scoped to data pipeline).
 
 - [ ] Add and commit `GOV-ARCH-001-Architecture-Documentation-Index.md`.
 

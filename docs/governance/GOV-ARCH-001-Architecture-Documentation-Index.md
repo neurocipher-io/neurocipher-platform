@@ -119,6 +119,7 @@ The following sections enumerate each family with path, status, and tier.
 | ID           | Title                                       | Path                                                                 | Status  | Tier  | Notes                                                      |
 |--------------|---------------------------------------------|----------------------------------------------------------------------|---------|-------|------------------------------------------------------------|
 | ARC-001      | Platform Context and Boundaries             | `docs/architecture/ARC-001-Platform-Context-and-Boundaries.md`      | Existing| 1     | System context, actors, trust boundaries.                  |
+| ARC-002      | Data Pipeline Architecture Blueprint        | `docs/architecture/ARC-002-Data-Pipeline-Architecture-Blueprint.md` | Active  | 1     | nc-data-pipeline subsystem architecture (ingest, normalize, embed, query). |
 | CORE-001     | Semantic Engine Architecture                | `docs/architecture/CORE-001-Semantic-Engine-Architecture.md`        | Planned | 2     | Neurocipher Core architecture and interfaces.              |
 | AH-001       | AuditHound Module Overview and Use Cases    | `docs/architecture/AH-001-AuditHound-Module-Overview-and-Use-Cases.md` | Planned | 2  | Product and flows for AuditHound.                          |
 | AH-002       | AuditHound Architecture and Integration     | `docs/architecture/AH-002-AuditHound-Architecture-and-Integration.md` | Planned | 2  | Technical architecture and dependencies.                   |
@@ -126,7 +127,6 @@ The following sections enumerate each family with path, status, and tier.
 | MCP-ARCH-001 | MCP Server Architecture                     | `docs/architecture/MCP-ARCH-001-MCP-Server-Architecture.md`         | Planned | 3     | High-level architecture for MCP server.                    |
 | MCP-TASK-001 | MCP Task Specification                      | `docs/architecture/MCP-TASK-001-Task-Specification.md`              | Planned | 2     | Defines MCP task model and lifecycle.                      |
 | MCP-LEDGER-001 | MCP Ledger Specification                  | `docs/architecture/MCP-LEDGER-001-Ledger-Specification.md`          | Planned | 2     | Defines MCP decision and task ledger format.               |
-| —            | System Architecture Blueprint               | `docs/architecture/System-Architecture-Blueprint.md`                | Existing| 1     | High-level blueprint referenced by ARC-001.                |
 | —            | Data Pipeline Architecture                  | `docs/architecture/Data-Pipeline-Architecture.md`                   | Existing| 1     | Detailed data pipeline architecture.                       |
 
 ## 8. Data models and contracts
