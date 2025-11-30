@@ -140,7 +140,17 @@ The following sections enumerate each family with path, status, and tier.
 | DM-006  | Event and Telemetry Contract Catalog            | `docs/data-models/DM-006-Event-and-Telemetry-Contract-Catalog.md`   | Planned  | 2     | Catalog of event and command contracts.               |
 | SRG-001 | Schema Registry Specification                   | `docs/data-models/SRG-001-Schema-Registry-Specification.md`         | Planned  | 2     | How schemas are stored, versioned, and validated.     |
 
-## 9. Ingestion documentation
+## 9. Shared libraries
+
+| ID      | Title                                           | Path                                                                 | Status   | Tier  | Notes                                             |
+|---------|-------------------------------------------------|----------------------------------------------------------------------|----------|-------|---------------------------------------------------|
+| —       | Shared Libraries Index                          | `libs/README.md`                                                     | Existing | 1     | Index and overview of all shared Python packages. |
+| —       | nc_models Package                               | `libs/python/nc_models/README.md`                                   | Existing | 1     | Canonical Pydantic models and data contracts.     |
+| —       | nc_common Package                               | `libs/python/nc_common/README.md`                                   | Existing | 1     | Shared utilities, configuration, and helpers.     |
+| —       | nc_observability Package                        | `libs/python/nc_observability/README.md`                            | Existing | 1     | Logging, metrics, and distributed tracing.        |
+| —       | nc_security Package                             | `libs/python/nc_security/README.md`                                 | Existing | 1     | Security primitives, validation, and audit.       |
+
+## 10. Ingestion documentation
 
 | ID      | Title                                           | Path                                                                 | Status   | Tier  | Notes                                             |
 |---------|-------------------------------------------------|----------------------------------------------------------------------|----------|-------|---------------------------------------------------|
@@ -148,7 +158,7 @@ The following sections enumerate each family with path, status, and tier.
 | ING-002 | Source Adapters and Connectors                  | `docs/ingestion/ING-002-Source-Adapters-and-Connectors.md`          | Planned  | 2     | Per-source adapter design and mapping.            |
 | ING-003 | Enrichment Routing and Persistence              | `docs/ingestion/ING-003-Enrichment-Routing-and-Persistence.md`      | Existing | 2     | Current ingestion and enrichment design.          |
 
-## 10. Service-level architecture
+## 11. Service-level architecture
 
 | ID           | Title                                       | Path                                                                 | Status   | Tier  | Notes                                                      |
 |--------------|---------------------------------------------|----------------------------------------------------------------------|----------|-------|------------------------------------------------------------|
@@ -158,7 +168,7 @@ The following sections enumerate each family with path, status, and tier.
 | DPS-API-001  | API Service Architecture                    | `docs/services/DPS-API-001-API-Service-Architecture.md`             | Planned  | 1     | FastAPI layer and query endpoints.                         |
 | DPS-BATCH-001| Batch and Reindex Service Architecture      | `docs/services/DPS-BATCH-001-Batch-and-Reindex-Service-Architecture.md` | Planned | 2 | Reindex, backfill, and migration jobs.                     |
 
-## 11. Security controls documentation
+## 12. Security controls documentation
 
 | ID      | Title                                           | Path                                                                 | Status                      | Tier  | Notes                                           |
 |---------|-------------------------------------------------|----------------------------------------------------------------------|-----------------------------|-------|-------------------------------------------------|
@@ -169,14 +179,14 @@ The following sections enumerate each family with path, status, and tier.
 | SEC-005 | Supply Chain and CI/CD Security                 | `docs/security-controls/SEC-005-Supply-Chain-and-CICD-Security.md`  | Planned                     | 2     | Dependency, build, and pipeline security.       |
 | SEC-006 | Privacy and Data Handling                       | `docs/security-controls/SEC-006-Privacy-and-Data-Handling.md`       | Planned                     | 3     | Data minimisation, retention, and deletion.     |
 
-## 12. AI and ML documentation
+## 13. AI and ML documentation
 
 | ID      | Title                                           | Path                                                                 | Status   | Tier  | Notes                                               |
 |---------|-------------------------------------------------|----------------------------------------------------------------------|----------|-------|-----------------------------------------------------|
 | AI-001  | Model Architecture and Routing                  | `docs/ai/AI-001-Model-Architecture-and-Routing.md`                  | Planned  | 2     | Model inventory, routing, and retrieval strategy.   |
 | AI-002  | Evaluation, Guardrails, and Safety Framework    | `docs/ai/AI-002-Evaluation-Guardrails-and-Safety-Framework.md`      | Planned  | 3     | Evaluation metrics, safety constraints, and drift.  |
 
-## 13. Observability and operations documentation
+## 14. Observability and operations documentation
 
 | ID        | Title                                         | Path                                                                 | Status           | Tier  | Notes                                                   |
 |-----------|-----------------------------------------------|----------------------------------------------------------------------|------------------|-------|---------------------------------------------------------|
@@ -186,7 +196,7 @@ The following sections enumerate each family with path, status, and tier.
 | ROL-001   | Rollout and Release Strategy                  | `docs/observability/ROL-001-Rollout-and-Release-Strategy.md`        | Planned          | 3     | Canary, feature flags, and rollback patterns.           |
 | SVC-001   | External Service Contracts                    | `docs/observability/SVC-001-External-Service-Contracts.md`          | Planned          | 2     | External API contracts and compatibility guarantees.    |
 
-## 14. Runbooks (architecture-linked)
+## 15. Runbooks (architecture-linked)
 
 | ID              | Title                               | Path                                                                 | Status   | Tier  | Notes                                      |
 |-----------------|-------------------------------------|----------------------------------------------------------------------|----------|-------|--------------------------------------------|
@@ -194,7 +204,7 @@ The following sections enumerate each family with path, status, and tier.
 | PIPELINE-RUN-001| Data Pipeline Runbook               | `docs/runbooks/PIPELINE-RUN-001-Data-Pipeline-Runbook.md`           | Planned  | 4     | Operational runbook for data pipeline.     |
 | AF-RUN-001      | Agent Forge Runbook                 | `docs/runbooks/AF-RUN-001-Agent-Forge-Runbook.md`                   | Planned  | 4     | Operational runbook for Agent Forge.       |
 
-## 15. Maintenance and acceptance criteria
+## 16. Maintenance and acceptance criteria
 
 This index is considered complete for the current architecture when:
 
