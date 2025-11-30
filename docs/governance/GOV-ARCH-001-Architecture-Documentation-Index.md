@@ -158,6 +158,25 @@ The following sections enumerate each family with path, status, and tier.
 | DPS-API-001  | API Service Architecture                    | `docs/services/DPS-API-001-API-Service-Architecture.md`             | Planned  | 1     | FastAPI layer and query endpoints.                         |
 | DPS-BATCH-001| Batch and Reindex Service Architecture      | `docs/services/DPS-BATCH-001-Batch-and-Reindex-Service-Architecture.md` | Planned | 2 | Reindex, backfill, and migration jobs.                     |
 
+## 10a. Service implementations
+
+This section lists the service implementation roots in the `services/` directory.
+Each service contains a README, pyproject.toml, src/, and tests/ structure.
+
+| Service Directory       | Module                  | Purpose                                          | Status    | Notes                                              |
+|-------------------------|-------------------------|--------------------------------------------------|-----------|-----------------------------------------------------|
+| `services/nc-data-pipeline` | Neurocipher Data Pipeline | Data ingestion, normalization, embedding, query  | Skeleton  | Implementation in progress per ARC-002.             |
+| `services/nc-core`          | Neurocipher Core          | Semantic engine for risk reasoning               | Skeleton  | Implementation follows CORE-001 when defined.       |
+| `services/nc-audithound-api`| AuditHound API            | Compliance assessment and reporting              | Skeleton  | Implementation follows AH-001, AH-002 when defined. |
+| `services/nc-agent-forge`   | Agent Forge               | Auto-remediation orchestration                   | Skeleton  | Implementation follows AF-001 when defined.         |
+| `services/nc-mcp-server`    | MCP Server                | Model Context Protocol integration               | Skeleton  | Implementation follows MCP-ARCH-001 when defined.   |
+
+Each service README includes:
+- Purpose and responsibilities
+- Explicit non-goals
+- Integration points with other modules
+- Links to relevant architecture documentation
+
 ## 11. Security controls documentation
 
 | ID      | Title                                           | Path                                                                 | Status                      | Tier  | Notes                                           |
